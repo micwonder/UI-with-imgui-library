@@ -59,7 +59,8 @@ int CleanGui::init_glfw()
     window = glfwCreateWindow(w, h, title, nullptr, nullptr);
     hwnd = glfwGetWin32Window(window);
     glfwMakeContextCurrent(window);
-    glViewport(0, 0, w, h);
+    SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+    glViewport(0, 0, w / 2, h / 2);
     glfwShowWindow(window);
 
     GLFWimage images[1];
