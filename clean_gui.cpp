@@ -1,21 +1,20 @@
-#include "CleanGui.hpp"
+#include "imgui.h"
+#include "clean_gui.hpp"
 
 #include <iostream>
 #include <GLFW/glfw3native.h>
 #include <dwmapi.h>
-
-#include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+#include <GL/gl.h>
 
 
 int CleanGui::init_glfw()
 {
     glfwInit();
-    //glewInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_RESIZABLE, 1);
@@ -41,11 +40,11 @@ int CleanGui::init_glfw()
 int CleanGui::init_im_gui()
 {
     ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
 
-    auto io = ImGui::GetIO();
-    io.IniFilename = nullptr;
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");// "#version 130"
     return 0;
 }
 

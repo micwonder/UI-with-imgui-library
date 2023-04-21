@@ -1,15 +1,12 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-
-#include "CleanGui.hpp"
-#include "imgui.h"
+#include "clean_gui.hpp"
 
 
 class Gui : CleanGui
 {
 private:
-    ImFont *font;
+    //ImFont *font;
 
 public:
     Gui();

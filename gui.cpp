@@ -1,5 +1,21 @@
-    #include "Gui.hpp"
-#include "CleanGui.hpp"
+#include "gui.hpp"
+#include "clean_gui.hpp"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include "design/abyssinica.h"
+#include "design/icon_font.h"
+
+ImFont* ico = nullptr;
+ImFont* tab_ico = nullptr;
+ImFont* tab_ico_two = nullptr;
+ImFont* general_icon = nullptr;
+ImFont* abys = nullptr;
+ImFont* rubik = nullptr;
+ImFont* rubik_input = nullptr;
+ImFont* Reem_font = nullptr;
+ImFont* sans = nullptr;
+
+bool active_tab = false;
 
 void create_dropdown_list(int &selected_item)
 {
@@ -40,9 +56,28 @@ Gui::Gui()
 {
     init_glfw();
     init_im_gui();
-    auto io = ImGui::GetIO();
-    auto Test = "C:/dev/Resources/Fonts/open-sans/OpenSans-Regular.ttf";
-    font = io.Fonts->AddFontFromFileTTF(Test, 25.0f); //Adding modern font
+    //auto io = ImGui::GetIO();
+    //auto Test = "C:/dev/Resources/Fonts/open-sans/OpenSans-Regular.ttf";
+    //font = io.Fonts->AddFontFromFileTTF(Test, 25.0f); //Adding modern font
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 23, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    rubik = io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 23, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    rubik_input = io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 20, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    ico = io.Fonts->AddFontFromMemoryTTF(&icon, sizeof icon, 17, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    tab_ico = io.Fonts->AddFontFromMemoryTTF(&icon, sizeof icon, 23, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    tab_ico_two = io.Fonts->AddFontFromMemoryTTF(&icon, sizeof icon, 33, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    general_icon = io.Fonts->AddFontFromMemoryTTF(&icon, sizeof icon, 20, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    Reem_font = io.Fonts->AddFontFromMemoryTTF(&Reem, sizeof Reem, 45, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    sans = io.Fonts->AddFontFromMemoryTTF(&open_sans, sizeof open_sans, 28, NULL, io.Fonts->GetGlyphRangesCyrillic());
 }
 
 bool Gui::isRunning() const
@@ -59,53 +94,8 @@ Gui::~Gui()
 void Gui::renderFrame()
 {
     start_clean_window();
-    ImGui::PushFont(font);
-
-    /*
-    // Menu Bar2
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("Account"))
-        {
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Settings"))
-        {
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Help"))
-        {
-            if (ImGui::MenuItem("About"))
-            {
-            }
-
-            if (ImGui::MenuItem("Check for updates"))
-            {
-                // code to check for updates
-            }
-            if (ImGui::MenuItem("Submit Feedback"))
-            {
-                // code to check for updates
-            }
-            if (ImGui::MenuItem("Support"))
-            {
-                // code to check for updates
-            }
-
-            ImGui::EndMenu();
-        }
-        //if (ImGui::MenuItem("MenuItem")) {} // You can also use MenuItem() inside a menu bar!
-        ImGui::EndMenuBar();
-    }
-
-    // Add ImGui UI elemnts here--------------------
-    ImGui::BeginChild("Checkbox List", ImVec2(0, ImGui::GetFrameHeightWithSpacing() * 6));
-    int selected_item;
-    create_dropdown_list(selected_item);
-    ImGui::EndChild();
-    ImGui::PopFont();
-    */
-
+    
+    
 
     glfwPollEvents();
 
