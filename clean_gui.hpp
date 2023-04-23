@@ -25,6 +25,11 @@ private:
     int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 500, h = 500;
     int SetWindowsTitleBar();
 
+    int window_pos_x = 100;
+    int window_pos_y = 100;
+    ImVec2 mouse_start_pos = {0, 0};
+    bool mouse_clicked = false;
+
 protected:
     GLFWwindow *window;
 

@@ -19,7 +19,7 @@ bool active_tab = false;
 
 void create_dropdown_list(int &selected_item)
 {
-    const char *items[] = {"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10"};
+    const char *items[] = {"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10"};    
     ImGui::PushItemWidth(150);
     ImGui::Combo("Default Hotkey", &selected_item, items, IM_ARRAYSIZE(items));
     ImGui::PopItemWidth();
@@ -94,9 +94,6 @@ Gui::~Gui()
 void Gui::renderFrame()
 {
     start_clean_window();
-    
-    
-
     glfwPollEvents();
 
     end_clean_window();

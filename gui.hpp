@@ -7,7 +7,6 @@ class Gui : CleanGui
 {
 private:
     //ImFont *font;
-
 public:
     Gui();
 

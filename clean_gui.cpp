@@ -19,6 +19,7 @@ int CleanGui::init_glfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_RESIZABLE, 1);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+    glfwWindowHint(GLFW_DECORATED, false);
     window = glfwCreateWindow(w, h, title, nullptr, nullptr);
     hwnd = glfwGetWin32Window(window);
     glfwMakeContextCurrent(window);
@@ -45,6 +46,7 @@ int CleanGui::init_im_gui()
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");// "#version 130"
+    glfwSetWindowPos(window, window_pos_x, window_pos_y);
     return 0;
 }
 
@@ -68,6 +70,30 @@ int CleanGui::start_clean_window()
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
                  ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize |
                  ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_MenuBar);
+    
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    {
+        ImVec2 mouse_pos = ImGui::GetMousePos();
+        if (!mouse_clicked)
+        {
+            mouse_start_pos = mouse_pos;
+            mouse_clicked = true;
+        }
+
+        // If the user clicks on the window, save the mouse position
+
+        glfwGetWindowPos(window, &window_pos_x, &window_pos_y); 
+
+        window_pos_x = mouse_pos.x - mouse_start_pos.x + window_pos_x;
+        window_pos_y = mouse_pos.y - mouse_start_pos.y + window_pos_y;
+        
+        glfwSetWindowPos(window, window_pos_x, window_pos_y);
+    }
+    else
+    {
+        if (mouse_clicked)
+	        mouse_clicked = false;
+    }
     ImGui::SetWindowSize(ImVec2(w, h));
     return 0;
 }
