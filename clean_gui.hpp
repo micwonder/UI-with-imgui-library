@@ -21,8 +21,8 @@ class CleanGui
 private:
     HWND hwnd;
     char *title = "Boss";
-    char *icon_image_path = "C:/dev/Resources/Icons/BossIcons/BossIcon-1.bmp";
-    int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 500, h = 500;
+    char *icon_image_path = "C:/dev/Resources/Icons/BossIcons/BossIcon-1.png";
+    int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 1100, h = 700;
     int SetWindowsTitleBar();
 
     int window_pos_x = 100;
@@ -77,4 +77,6 @@ public:
 
     int terminate_im_gui();
     int terminate_glfw();
+
+    bool LoadTextureFromFile(const char* filename, GLuint* out_texture, int* out_width, int* out_height);
 };

@@ -3,7 +3,7 @@
 #include "clean_gui.hpp"
 
 
-class Gui : CleanGui
+class Gui : public CleanGui
 {
 private:
     //ImFont *font;

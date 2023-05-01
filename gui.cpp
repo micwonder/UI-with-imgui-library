@@ -52,6 +52,7 @@ void showAbout(bool &showWindow)
     }
 }
 
+
 Gui::Gui()
 {
     init_glfw();
@@ -61,7 +62,7 @@ Gui::Gui()
     //font = io.Fonts->AddFontFromFileTTF(Test, 25.0f); //Adding modern font
 
     ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 23, NULL, io.Fonts->GetGlyphRangesCyrillic());
+    io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 40, NULL, io.Fonts->GetGlyphRangesCyrillic());
 
     rubik = io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 23, NULL, io.Fonts->GetGlyphRangesCyrillic());
 
@@ -78,6 +79,10 @@ Gui::Gui()
     Reem_font = io.Fonts->AddFontFromMemoryTTF(&Reem, sizeof Reem, 45, NULL, io.Fonts->GetGlyphRangesCyrillic());
 
     sans = io.Fonts->AddFontFromMemoryTTF(&open_sans, sizeof open_sans, 28, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 55, NULL, io.Fonts->GetGlyphRangesCyrillic());
+
+    io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 13, NULL, io.Fonts->GetGlyphRangesCyrillic());
 }
 
 bool Gui::isRunning() const
@@ -88,13 +93,13 @@ bool Gui::isRunning() const
 Gui::~Gui()
 {
     terminate_im_gui();
-    //terminate_glfw();
+    terminate_glfw();
 }
 
 void Gui::renderFrame()
 {
     start_clean_window();
     glfwPollEvents();
-
+    
     end_clean_window();
 }
