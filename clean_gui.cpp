@@ -40,6 +40,7 @@ bool CleanGui::LoadTextureFromFile(const char* filename, GLuint* out_texture, in
     *out_texture = image_texture;
     *out_width = image_width;
     *out_height = image_height;
+    
     return true;
 }
 
@@ -54,7 +55,6 @@ int CleanGui::init_glfw()
     window = glfwCreateWindow(w, h, title, nullptr, nullptr);
     hwnd = glfwGetWin32Window(window);
     glfwMakeContextCurrent(window);
-    glViewport(0, 0, w, h);
     glfwShowWindow(window);
 
     GLFWimage images[1];
@@ -91,41 +91,51 @@ int CleanGui::start_clean_window()
     //resize
     int window_w, window_h;
     glfwGetWindowSize(window, &window_w, &window_h);
-    ImGui::SetNextWindowSize(ImVec2(static_cast<float>(window_w) + 3, static_cast<float>(window_h) + 2));
-    ImGui::SetNextWindowPos(ImVec2(-1, -1));
+    ImGui::SetNextWindowSize(ImVec2(static_cast<float>(window_w), static_cast<float>(window_h)));
 
     //MainSpace
     ImGui::SetNextWindowPos({0, 0});
-    ImGui::SetNextWindowSizeConstraints(ImVec2(0 * 10 + 142, 50), ImVec2(FLT_MAX, FLT_MAX));
-    ImGui::Begin(title, nullptr,
+    ImGui::SetNextWindowSizeConstraints(ImVec2(1100, 700), ImVec2(FLT_MAX, FLT_MAX));
+
+    bool select = true;
+
+    ImGui::Begin(title, &select,
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
-                 ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize |
                  ImGuiWindowFlags_NoBringToFrontOnFocus);
-    
-    if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    if (ImGui::IsWindowHovered())
     {
-        ImVec2 mouse_pos = ImGui::GetMousePos();
-        if (!mouse_clicked)
+        POINT mouse_pos;
+        GetCursorPos(&mouse_pos);
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
         {
-            mouse_start_pos = mouse_pos;
-            mouse_clicked = true;
+            if (!mouse_clicked)
+            {
+                mouse_start_pos = mouse_pos;
+                init_x = window_pos_x;
+                init_y = window_pos_y;
+                mouse_clicked = true;
+            }
         }
-
-        // If the user clicks on the window, save the mouse position
-
-        glfwGetWindowPos(window, &window_pos_x, &window_pos_y); 
-
-        window_pos_x = mouse_pos.x - mouse_start_pos.x + window_pos_x;
-        window_pos_y = mouse_pos.y - mouse_start_pos.y + window_pos_y;
-        
-        glfwSetWindowPos(window, window_pos_x, window_pos_y);
+        else if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+        {
+            if (mouse_clicked)
+            {
+                window_pos_x = init_x - mouse_start_pos.x + mouse_pos.x;
+                window_pos_y = init_y - mouse_start_pos.y + mouse_pos.y;
+                glfwSetWindowPos(window, window_pos_x, window_pos_y);
+            }
+        }
+        else if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+        {
+            if (mouse_clicked)
+                mouse_clicked = false;
+        }
     }
     else
-    {
-        if (mouse_clicked)
-	        mouse_clicked = false;
-    }
-    ImGui::SetWindowSize(ImVec2(w, h));
+        mouse_clicked = false;
+    w = (int)ImGui::GetWindowSize().x >= 1100 ? (int)ImGui::GetWindowSize().x : 1100;
+    h = (int)ImGui::GetWindowSize().y >= 700 ? (int)ImGui::GetWindowSize().y : 700;
+    glfwSetWindowSize(window, w, h);
     return 0;
 }
 
@@ -134,7 +144,6 @@ int CleanGui::end_clean_window()
     ImGui::End();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
     glfwSwapBuffers(window);
     glfwPollEvents();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -157,3 +166,9 @@ int CleanGui::terminate_glfw()
     glfwTerminate();
     return 0;
 }
+
+ImVec2 CleanGui::getWindowSize() { return { (float)w, (float)h }; }
+void CleanGui::minimizeWindow() { glfwIconifyWindow(window); }
+void CleanGui::maximizeWindow() { glfwMaximizeWindow(window); }
+void CleanGui::restoreWindow() { glfwRestoreWindow(window); }
+void CleanGui::closeWindow() { isclose = true; }
