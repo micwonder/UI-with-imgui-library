@@ -20,6 +20,7 @@
 #define COLOR_AUDIO_EDGE IM_COL32(0x1c, 0x24, 0x31, 0xff)
 #define COLOR_AUDIO_GRAPH IM_COL32(0x2c, 0x9f, 0xff, 0xff)
 #define COLOR_NOTIFICATION IM_COL32(0x06, 0xe9, 0xfa, 0xff)
+#define COLOR_TILE IM_COL32(0x21, 0x24, 0x30, 0xff)
 
 #define INPUT_TYPE_EMAIL 0
 #define INPUT_TYPE_PASSWORD 1
@@ -47,7 +48,7 @@ private:
 
     int current_page;
     InputTexts input_email, input_password;
-
+    std::vector<Popups> popups;
     GLuint my_image_texture[20] = { 0 };
 public:
     Gui();
@@ -62,14 +63,17 @@ public:
     void settingPage();
     void overviewPage();
 
+    void createFonts();
+    void createPopups();
     void loadImage();
     void deleteImage();
     void dividePane(float div_pos, ImU32 left_color, ImU32 right_color); // devide panel to left and right
     void createTitleBar(ImU32 color); // create minimize, maximize, close button
     void createTabIcon(); // create account, overview, earphone, setting tab
     void createText(ImVec2 pos, ImVec2 size, char* text, ImFont* font, ImU32 color); //create Text in specified font and color
+    void createWrapText(char* text, ImFont* font, float wrap_pos, ImU32 color); //create wrap Text in specified font and color
     float createCheckBox(ImVec2 pos, char* title, char* check_label, bool* check_flag); // create a checkbox with title
-    //void createInputText(ImVec2 pos, ImVec2 size, int flag);
     void createProgressBar(float value, ImVec2 size); //create progress bar
+    void createLanguageSpoken(std::vector<char*> languages, std::vector<float> values, ImVec2 size);
     void clearPopup();
 };

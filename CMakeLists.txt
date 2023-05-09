@@ -21,12 +21,10 @@ include_directories(${GLEW_INCLUDE_DIRS})
 find_package(glfw3 CONFIG REQUIRED)
 
 add_subdirectory(imgui)
-
 add_executable(${TEST_TARGET} "main.cpp")
-add_library(${TARGET} STATIC "gui.cpp" "inputtexts.cpp" "inputtexts.hpp" "timeplot.cpp" "timeplot.hpp" "gui.hpp" "clean_gui.cpp" "clean_gui.hpp" "tiles.cpp" "tiles.hpp" "popups.hpp" "popups.cpp" "design/MenuBg.h" "design/GeneralBg.h" "design/icon_font.h" "design/abyssinica.h" "design/blur.cpp" "design/blur_x.h" "design/blur_y.h" "tiles.cpp" "popups.cpp" "timeplot.cpp" "inputtexts.cpp") #"design/abyssinica.h" "design/blur.cpp" "design/blur.hpp" "design/blur_x.h" "design/blur_y.h" "design/GeneralBg.h" "design/icon_font.h" "design/MenuBg.h")
+add_library(${TARGET} STATIC "gui.cpp" "gui.hpp" "inputtexts.cpp" "popups.cpp" "tiles.cpp" "timeplot.cpp" "clean_gui.cpp" "clean_gui.hpp" "design/MenuBg.h" "design/GeneralBg.h" "design/icon_font.h" "design/abyssinica.h" "design/blur.cpp" "design/blur_x.h" "design/blur_y.h") #"design/abyssinica.h" "design/blur.cpp" "design/blur.hpp" "design/blur_x.h" "design/blur_y.h" "design/GeneralBg.h" "design/icon_font.h" "design/MenuBg.h")
 target_include_directories(${TARGET} PUBLIC .)
 
 target_link_libraries(${TARGET} imgui glfw ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} Microsoft::D3DX9 Microsoft::D3DX10 Microsoft::D3DX11)
 
 target_link_libraries(${TEST_TARGET} ${TARGET} imgui glfw ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} Microsoft::D3DX9 Microsoft::D3DX10 Microsoft::D3DX11)
-
