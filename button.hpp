@@ -18,7 +18,7 @@ class Button
 	ImFont* font;
 	GLuint image;
 public:
-	Event* clickEvent;
+	Event* click_event;
 	Button();
 	~Button();
 	Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type);

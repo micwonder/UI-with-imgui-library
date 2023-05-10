@@ -2,9 +2,11 @@
 
 #include "clean_gui.hpp"
 #include "tiles.hpp"
-#include "popups.hpp"
+#include "selector.hpp"
 #include "inputtexts.hpp"
 #include "button.hpp"
+#include "checkbox.hpp"
+
 #include <map>
 
 #define COLOR_BLACK IM_COL32(0x00, 0x00, 0x00, 0xff)
@@ -38,22 +40,21 @@ class Gui : public CleanGui
 private:
     //ImFont *font;
     bool isMaximized = false;
+
     bool checked_command = false;
     bool checked_vad = false;
     bool checked_rules = false;
     bool checked_remeber_me = true;
 
-    bool wpm_button_clicked = false;
-    bool device_button_clicked = false;
-    bool news_button_clicked = false;
     bool checked_notification = true;
 
     int current_page;
     GLuint my_image_texture[20] = { 0 };
 
-    InputTexts input_email, input_password;
-    std::vector<Popups> popups;
+    Selector wpm_selector, device_selector, news_selector;
     Button register_button, forgot_button, login_button, account_button, overview_button, setting_button, dictation_button;
+    InputTexts email_input, password_input;
+    CheckBox remember_checkbox, command_checkbox, vad_checkbox, rules_checkbox;
 public:
     std::map<std::string, Event*> events;
     Gui();
@@ -68,8 +69,11 @@ public:
     void overviewPage();
 
     void createFonts();
-    void createPopups();
     void createButtons();
+    void createInputTexts();
+    void createSelectors();
+    void clearSelectors();
+    void createCheckboxes();
     void loadImage();
     void deleteImage();
 
@@ -86,5 +90,4 @@ public:
     float createCheckBox(ImVec2 pos, char* title, char* check_label, bool* check_flag); // create a checkbox with title
     void createProgressBar(float value, ImVec2 size); //create progress bar
     void createLanguageSpoken(std::vector<char*> languages, std::vector<float> values, ImVec2 size);
-    void clearPopup();
 };

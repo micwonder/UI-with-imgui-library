@@ -68,12 +68,9 @@ Gui::Gui()
     createFonts();
     loadImage();
 
-    createPopups();
     createButtons();
-    ImVec2 size = getWindowSize();
-    input_email = InputTexts("##email", { size.x / 5 * 3, size.y / 5 * 2 }, { size.x / 5 * 2, size.y / 10 }, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_EMAIL, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
-    input_password = InputTexts("##password", { size.x / 5 * 3, size.y / 2 }, { size.x / 5 * 2, size.y / 10 }, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_PASSWORD, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
-    
+    createInputTexts();
+    createSelectors();
 }
 
 Gui::~Gui()
@@ -99,19 +96,6 @@ void Gui::createFonts()
     io.Fonts->AddFontFromMemoryTTF(&rubik_font_medium, sizeof rubik_font_medium, 13, NULL, io.Fonts->GetGlyphRangesCyrillic());
 }
 
-void Gui::createPopups()
-{
-    std::vector<std::string> wpm_items = { "Per day", "Per week", "Per month", "Per year" };
-    Popups popup1("##button_wpm", "WPM", wpm_items, { 0, 0 }, ImVec2(70, 100), ALIGN_LEFT);
-    std::vector<std::string> device_items = { "Default", "Other" };
-    Popups popup2("##button_device", "Device", device_items, { 0, 0 }, ImVec2(70, 100), ALIGN_LEFT);
-    std::vector<std::string> news_items = { "Default notification", "Other notification" };
-    Popups popup3("##button_new", "News", news_items, { 0, 0 }, ImVec2(170, 100), ALIGN_RIGHT, my_image_texture[9]);
-
-    popups.push_back(popup1);
-    popups.push_back(popup2);
-    popups.push_back(popup3);
-}
 
 void Gui::createButtons()
 {
@@ -123,14 +107,44 @@ void Gui::createButtons()
     dictation_button = Button("##button_dictation", { 0, 0 }, { 0, 0 }, my_image_texture[6]);
     setting_button = Button("##button_setting", { 0, 0 }, { 0, 0 }, my_image_texture[7]);
 
-    events["registerbuttonclicked"] = register_button.clickEvent;
-    events["forgotbuttonclicked"] = forgot_button.clickEvent;
-    events["loginbuttonclicked"] = login_button.clickEvent;
-    events["accountbuttonclicked"] = account_button.clickEvent;
-    events["overviewbuttonclicked"] = overview_button.clickEvent;
-    events["dictationbuttonclicked"] = dictation_button.clickEvent;
-    events["settingbuttonclicked"] = setting_button.clickEvent;
+    events["registerbuttonclicked"] = register_button.click_event;
+    events["forgotbuttonclicked"] = forgot_button.click_event;
+    events["loginbuttonclicked"] = login_button.click_event;
+    events["accountbuttonclicked"] = account_button.click_event;
+    events["overviewbuttonclicked"] = overview_button.click_event;
+    events["dictationbuttonclicked"] = dictation_button.click_event;
+    events["settingbuttonclicked"] = setting_button.click_event;
 }
+void Gui::createInputTexts()
+{
+    email_input = InputTexts("##email", {0, 0}, {0, 0}, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_EMAIL, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
+    password_input = InputTexts("##password", {0, 0}, {0, 0}, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_PASSWORD, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
+
+    events["emailchanged"] = email_input.text_edit_event;
+    events["passwordchanged"] = password_input.text_edit_event;
+}
+
+void Gui::createSelectors()
+{
+    std::vector<std::string> wpm_items = { "Per day", "Per week", "Per month", "Per year" };
+    std::vector<std::string> device_items = { "Default", "Other" };
+    std::vector<std::string> news_items = { "Default notification", "Other notification" };
+
+    wpm_selector = Selector("##button_wpm", "WPM", wpm_items, { 0, 0 }, ImVec2(70, 100), ALIGN_LEFT);
+    device_selector = Selector("##button_device", "Device", device_items, { 0, 0 }, ImVec2(70, 100), ALIGN_LEFT);
+    news_selector = Selector("##button_new", "News", news_items, { 0, 0 }, ImVec2(170, 100), ALIGN_RIGHT, my_image_texture[9]);
+
+    events["wpmselected"] = wpm_selector.select_event;
+    events["deviceselected"] = device_selector.select_event;
+    events["newsselected"] = news_selector.select_event;
+}
+void Gui::clearSelectors()
+{
+    wpm_selector.removeSelect();
+    device_selector.removeSelect();
+    news_selector.removeSelect();
+}
+
 void Gui::loadImage()
 {
     int my_image_width = 0;
@@ -272,13 +286,13 @@ void Gui::createTitleBar(ImU32 color) // create minimize, maximize, close button
 void Gui::createTabIcon() // create account, overview, earphone, setting tab
 {
     ImVec2 size = getWindowSize();
-    ImVec2 buttonsize = { 75, 75};
+    ImVec2 buttonsize = { 75, 75 };
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_GUI_LEFT);
 
-    account_button.render({ 0, 0 }, buttonsize);
-    overview_button.render({ 0, size.y / 7 * 2 }, buttonsize);
-    dictation_button.render({ 0, size.y / 7 * 3 }, buttonsize);
-    setting_button.render({ 0, size.y / 7 * 5 }, buttonsize);
+    if (account_button.render({ 0, 0 }, buttonsize)) { toAccountPage(); }
+    if (overview_button.render({ 0, size.y / 7 * 2 }, buttonsize)) { toOverviewPage(); }
+    if (dictation_button.render({ 0, size.y / 7 * 3 }, buttonsize)) { toDictationPage(); }
+    if (setting_button.render({ 0, size.y / 7 * 5 }, buttonsize)) { toSettingPage(); }
     
     ImGui::PopStyleColor();
 }
@@ -299,16 +313,11 @@ float Gui::createCheckBox(ImVec2 pos, char* title, char* check_label, bool* chec
     return ImGui::GetCursorPos().y;
 }
 
-void Gui::clearPopup()
-{
-    for (int i = 0; i < popups.size(); ++i)
-        popups[i].removeSelect();
-}
 
 void Gui::renderFrame()
 {
     start_clean_window();
-    if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) { clearPopup(); }
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) { clearSelectors(); }
     switch (current_page)
     {
         case PAGE_LOGIN:
@@ -370,8 +379,8 @@ void Gui::bossDictationPage()
     createText({ size.x / 5 * 3, size.y / 5 }, { size.x / 5 * 2, size.y / 5 }, "Welcome", ImGui::GetIO().Fonts->Fonts[9], COLOR_TITLE);
 
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-    input_email.render({ size.x / 5 * 3, size.y / 5 * 2 }, { size.x / 5 * 2, size.y / 10 });
-    input_password.render({ size.x / 5 * 3, size.y / 2 }, { size.x / 5 * 2, size.y / 10 });
+    email_input.render({ size.x / 5 * 3, size.y / 5 * 2 }, { size.x / 5 * 2, size.y / 10 });
+    password_input.render({ size.x / 5 * 3, size.y / 2 }, { size.x / 5 * 2, size.y / 10 });
 
     ImGui::SetWindowPos({ size.x / 5 * 3, 0 });
     ImGui::Checkbox("Remember me", &checked_remeber_me);
@@ -442,8 +451,8 @@ void Gui::overviewPage()
         createText({ 0, 0 }, subtiles.curSize(), "WPM Average", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
         subtiles.addTile("Average_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BLACK);
-        createText({ 0, 0 }, subtiles.curSize(), wpm_values[popups[0].currentIndex()].data(), ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
-        popups[0].doModal({tiles.curPos() + tiles.curSize() - ImVec2(60, 20)}, {70, 100});
+        createText({ 0, 0 }, subtiles.curSize(), wpm_values[wpm_selector.currentIndex()].data(), ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
+        wpm_selector.doModal({tiles.curPos() + tiles.curSize() - ImVec2(60, 20)}, {70, 100});
         subtiles.endTile();
     }
     tiles.endTile();
@@ -479,14 +488,14 @@ void Gui::overviewPage()
     ImGui::GetWindowDrawList()->AddRectFilled(curpos + ImVec2(5, 15), curpos + cursize - ImVec2(5, 5), IM_COL32(0x0d, 0x12, 0x1d, 0xff));
     ImGui::SetCursorScreenPos(curpos + ImVec2(5, 0));
     ImGui::Text("INPUT DEVICE");
-    popups[1].doModal(curpos + ImVec2(0, 15), ImVec2(70, 100));
+    device_selector.doModal(curpos + ImVec2(0, 15), ImVec2(70, 100));
     ImGui::PopFont();
 
     // Notification Icon
     curpos = ImVec2(windowsize.x - 110, 35);
     cursize = ImVec2(30, 30);
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[10]);
-    popups[2].doModal(curpos, {170, 100});
+    news_selector.doModal(curpos, {170, 100});
     ImGui::PopFont();
     if (checked_notification) { ImGui::GetWindowDrawList()->AddCircleFilled(curpos + ImVec2(25, 10), 4.0f, COLOR_NOTIFICATION); }
 

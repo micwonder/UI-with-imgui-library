@@ -79,8 +79,7 @@ public:
     }
     void OnEvent(std::initializer_list<void*> param) {
         auto it = param.begin();
-        int* const* index = (int* const*)it;
-        ++it;
+        int* const* index = (int* const*)it++;
         char* const* text = (char* const*)it;
         for (auto listener : Listners) { listener(*(int*)index, *text); }
     }

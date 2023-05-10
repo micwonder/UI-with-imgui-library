@@ -2,8 +2,8 @@
 
 Button::Button() {}
 Button::~Button() {}
-Button::Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type) : id(_id), text(_text), pos(_pos), size(_size), font(_font), type(_type) { clickEvent = new ClickEvent; }
-Button::Button(std::string _id, ImVec2 _pos, ImVec2 _size, GLuint _image) : id(_id), pos(_pos), size(_size), image(_image), type(BUTTON_IMAGE){ clickEvent = new ClickEvent; }
+Button::Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type) : id(_id), text(_text), pos(_pos), size(_size), font(_font), type(_type) { click_event = new ClickEvent; }
+Button::Button(std::string _id, ImVec2 _pos, ImVec2 _size, GLuint _image) : id(_id), pos(_pos), size(_size), image(_image), type(BUTTON_IMAGE){ click_event = new ClickEvent; }
 bool Button::render(ImVec2 _pos, ImVec2 _size)
 {
 	pos = _pos;
@@ -15,7 +15,7 @@ bool Button::render(ImVec2 _pos, ImVec2 _size)
 		ImGui::SetCursorScreenPos(pos);
 		if (ImGui::Button(text.data(), size))
 		{
-			clickEvent->OnEvent({});
+			click_event->OnEvent({});
 			clicked = true;
 		}
 		ImGui::PopFont();
@@ -25,7 +25,7 @@ bool Button::render(ImVec2 _pos, ImVec2 _size)
 		ImGui::SetWindowPos(pos);
 		if (ImGui::TextButton(id.data(), text.data(), size))
 		{
-			clickEvent->OnEvent({});
+			click_event->OnEvent({});
 			clicked = true;
 		}
 		ImGui::PopFont();
@@ -35,7 +35,7 @@ bool Button::render(ImVec2 _pos, ImVec2 _size)
 		ImGui::SetCursorScreenPos(pos);
 		if (ImGui::ImageButton(id.data(), (void*)(intptr_t)image, r_size))
 		{
-			clickEvent->OnEvent({});
+			click_event->OnEvent({});
 			clicked = true;
 		}
 	}

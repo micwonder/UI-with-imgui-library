@@ -1,10 +1,11 @@
-#include "popups.hpp"
+#include "selector.hpp"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
-Popups::Popups() {}
-Popups::Popups(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align)
+Selector::Selector() {}
+Selector::Selector(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align)
 {
+    select_event = new SelectEvent;
 	button_id = _button_id;
     popup_id = _popup_id;
 	for (int i = 0; i < _items.size(); ++i)
@@ -18,8 +19,9 @@ Popups::Popups(std::string _button_id, std::string _popup_id, std::vector<std::s
     type = TEXT_BUTTON;
 }
 
-Popups::Popups(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align, GLuint _image)
+Selector::Selector(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align, GLuint _image)
 {
+    select_event = new SelectEvent;
     button_id = _button_id;
     popup_id = _popup_id;
     for (int i = 0; i < _items.size(); ++i)
@@ -34,11 +36,11 @@ Popups::Popups(std::string _button_id, std::string _popup_id, std::vector<std::s
     image = _image;
 }
 
-Popups::~Popups()
+Selector::~Selector()
 {
 }
 
-void Popups::doModal(ImVec2 _pos, ImVec2 _size)
+void Selector::doModal(ImVec2 _pos, ImVec2 _size)
 {
     buttonpos = _pos;
     popupsize = _size;
@@ -65,9 +67,10 @@ void Popups::doModal(ImVec2 _pos, ImVec2 _size)
     ImGui::PopFont();
 }
 
-bool Popups::render()
+bool Selector::render()
 {
     bool selected = true;
+    int past_index = current_index;
     ImGui::SetNextWindowSize(popupsize);
     ImGui::SetNextWindowPos(popuppos);
     ImGui::OpenPopup(popup_id.data());
@@ -80,6 +83,8 @@ bool Popups::render()
             {
                 current_item = items[n];
                 current_index = n;
+                if (past_index != current_index)
+                    select_event->OnEvent({ (void*)current_index, current_item.data()});
                 selected = false;
             }
             if (is_selected)
@@ -90,6 +95,6 @@ bool Popups::render()
     return selected;
 }
 
-int Popups::currentIndex() { return current_index; }
-std::string Popups::currentItem() { return current_item; }
-void Popups::removeSelect() { button_clicked = false; }
+int Selector::currentIndex() { return current_index; }
+std::string Selector::currentItem() { return current_item; }
+void Selector::removeSelect() { button_clicked = false; }
