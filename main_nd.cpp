@@ -7,13 +7,13 @@
 #include <d3dx9.h>
 #pragma comment(lib,"d3dx9.lib")
 
-#include "MenuBg.h" // Background picture
-#include "abyssinica.h" // Original font -> 0
+#include "design/MenuBg.h" // Background picture
+#include "design/abyssinica.h" // Original font -> 0
 
 // Blur
 #include "blur.hpp"
-#include "GeneralBg.h"
-#include "icon_font.h"
+#include "design/GeneralBg.h"
+#include "design/icon_font.h"
 
 LPDIRECT3D9              g_pD3D = NULL;
 LPDIRECT3DDEVICE9        g_pd3dDevice = NULL;
