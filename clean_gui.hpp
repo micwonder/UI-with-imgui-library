@@ -15,6 +15,7 @@
 #include <Windows.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "imgui.h"
+#include "event.hpp"
 
 class CleanGui
 {
@@ -37,40 +38,6 @@ protected:
     GLFWwindow *window;
 
 public:
-    class Event
-    {
-    public:
-        // Define a delegate type for the button click event
-        using ClickDelegate = void(*)();
-
-        // Add a listener to the button click event
-        void AddClickListener(ClickDelegate listener)
-        {
-            m_clickListeners.push_back(listener);
-        }
-
-        // Remove a listener from the button click event
-        void RemoveClickListener(ClickDelegate listener)
-        {
-            auto it = std::find(m_clickListeners.begin(), m_clickListeners.end(), listener);
-            if (it != m_clickListeners.end())
-            {
-                m_clickListeners.erase(it);
-            }
-        }
-
-        // Call all listeners when the button is clicked
-        void OnClick()
-        {
-            for (auto listener : m_clickListeners)
-            {
-                listener();
-            }
-        }
-
-    private:
-        std::vector<ClickDelegate> m_clickListeners;
-    };
     bool isclose = false;
     int init_glfw();
     int init_im_gui();

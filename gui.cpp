@@ -63,11 +63,13 @@ Gui::Gui()
     //auto io = ImGui::GetIO();
     //auto Test = "C:/dev/Resources/Fonts/open-sans/OpenSans-Regular.ttf";
     //font = io.Fonts->AddFontFromFileTTF(Test, 25.0f); //Adding modern font
-    createFonts();
-    loadImage();
-    createPopups();
     current_page = PAGE_LOGIN;
 
+    createFonts();
+    loadImage();
+
+    createPopups();
+    createButtons();
     ImVec2 size = getWindowSize();
     input_email = InputTexts("##email", { size.x / 5 * 3, size.y / 5 * 2 }, { size.x / 5 * 2, size.y / 10 }, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_EMAIL, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
     input_password = InputTexts("##password", { size.x / 5 * 3, size.y / 2 }, { size.x / 5 * 2, size.y / 10 }, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_PASSWORD, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
@@ -110,6 +112,25 @@ void Gui::createPopups()
     popups.push_back(popup2);
     popups.push_back(popup3);
 }
+
+void Gui::createButtons()
+{
+    register_button = Button("##Register", "Register", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], BUTTON_TEXT);
+    forgot_button = Button("##Forgot_Password", "Forgot Password?", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], BUTTON_TEXT);
+    login_button = Button("##Button", "Login", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], BUTTON_NORMAL);
+    account_button = Button("##button_account", { 0, 0 }, { 0, 0 }, my_image_texture[4]);
+    overview_button = Button("##button_overview", { 0, 0 }, { 0, 0 }, my_image_texture[5]);
+    dictation_button = Button("##button_dictation", { 0, 0 }, { 0, 0 }, my_image_texture[6]);
+    setting_button = Button("##button_setting", { 0, 0 }, { 0, 0 }, my_image_texture[7]);
+
+    events["registerbuttonclicked"] = register_button.clickEvent;
+    events["forgotbuttonclicked"] = forgot_button.clickEvent;
+    events["loginbuttonclicked"] = login_button.clickEvent;
+    events["accountbuttonclicked"] = account_button.clickEvent;
+    events["overviewbuttonclicked"] = overview_button.clickEvent;
+    events["dictationbuttonclicked"] = dictation_button.clickEvent;
+    events["settingbuttonclicked"] = setting_button.clickEvent;
+}
 void Gui::loadImage()
 {
     int my_image_width = 0;
@@ -133,6 +154,11 @@ void Gui::deleteImage()
 {
     glDeleteTextures(14, my_image_texture);
 }
+void Gui::toAccountPage() { current_page = PAGE_ACCOUNT; }
+void Gui::toOverviewPage() { current_page = PAGE_OVERVIEW; }
+void Gui::toSettingPage() { current_page = PAGE_SETTING; }
+void Gui::toDictationPage() { current_page = PAGE_DICTATION; }
+
 bool Gui::isRunning() const
 {
     if (!isclose)
@@ -246,22 +272,14 @@ void Gui::createTitleBar(ImU32 color) // create minimize, maximize, close button
 void Gui::createTabIcon() // create account, overview, earphone, setting tab
 {
     ImVec2 size = getWindowSize();
-    ImVec2 padding = ImGui::GetStyle().FramePadding;
-    ImVec2 buttonsize = { 75 - padding.x * 2, 75 - padding.x * 2 };
+    ImVec2 buttonsize = { 75, 75};
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_GUI_LEFT);
 
-    ImGui::SetCursorScreenPos(ImVec2(0, 0));
-    if (ImGui::ImageButton("##button_account", (void*)(intptr_t)my_image_texture[4], buttonsize)) { current_page = PAGE_ACCOUNT; }
-
-    ImGui::SetCursorScreenPos(ImVec2(0, size.y / 7 * 2));
-    if (ImGui::ImageButton("##button_overview", (void*)(intptr_t)my_image_texture[5], buttonsize)) { current_page = PAGE_OVERVIEW; }
-
-    ImGui::SetCursorScreenPos(ImVec2(0, size.y / 7 * 3));
-    if (ImGui::ImageButton("##button_dictation", (void*)(intptr_t)my_image_texture[6], buttonsize)) { current_page = PAGE_DICTATION; }
-
-    ImGui::SetCursorScreenPos(ImVec2(0, size.y / 7 * 5));
-    if (ImGui::ImageButton("##button_setting", (void*)(intptr_t)my_image_texture[7], buttonsize)) { current_page = PAGE_SETTING; }
-
+    account_button.render({ 0, 0 }, buttonsize);
+    overview_button.render({ 0, size.y / 7 * 2 }, buttonsize);
+    dictation_button.render({ 0, size.y / 7 * 3 }, buttonsize);
+    setting_button.render({ 0, size.y / 7 * 5 }, buttonsize);
+    
     ImGui::PopStyleColor();
 }
 
@@ -357,16 +375,13 @@ void Gui::bossDictationPage()
 
     ImGui::SetWindowPos({ size.x / 5 * 3, 0 });
     ImGui::Checkbox("Remember me", &checked_remeber_me);
-    ImGui::SetWindowPos({ size.x / 5 * 4 - 20, size.y / 5 * 3 + 30 });
-    ImGui::TextButton("##Register", "Register");
-    ImGui::SetWindowPos({ size.x / 10 * 9 - 40, size.y / 5 * 3 + 30 });
-    ImGui::TextButton("##Forgot_Password", "Forgot Password?");
+    register_button.render({ size.x / 5 * 4 - 20, size.y / 5 * 3 + 30 }, { 0, 0 });
+    forgot_button.render({ size.x / 10 * 9 - 40, size.y / 5 * 3 + 30 }, { 0, 0 });
     
-    ImVec2 buttonsize = { 260, 50 };
-    ImGui::SetCursorScreenPos({ size.x / 5 * 3 + (size.x / 5 * 2 - buttonsize.x) / 2, size.y / 5 * 4 + (size.y / 5 - buttonsize.y) / 2 });
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON_LOGIN);
-    if (ImGui::Button("Login", buttonsize))
-        current_page = PAGE_ACCOUNT;
+    ImVec2 buttonsize = { 260, 50 };
+    if (login_button.render({ size.x / 5 * 3 + (size.x / 5 * 2 - buttonsize.x) / 2, size.y / 5 * 4 + (size.y / 5 - buttonsize.y) / 2 }, buttonsize))
+        toAccountPage();
     ImGui::PopStyleColor();
     ImGui::PopFont();
 }
@@ -424,7 +439,7 @@ void Gui::overviewPage()
     {
         Tiles subtiles({ 0, 0 }, tiles.curSize(), { 1, 2 }, 0.0f, 0.0f);
         subtiles.addTile("Average_CHILD1", { 0, 0 }, { 1, 1 }, COLOR_BLACK);
-        createText({ 0, 0 }, subtiles.curSize(), "WPM Average", ZImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
+        createText({ 0, 0 }, subtiles.curSize(), "WPM Average", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
         subtiles.addTile("Average_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BLACK);
         createText({ 0, 0 }, subtiles.curSize(), wpm_values[popups[0].currentIndex()].data(), ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);

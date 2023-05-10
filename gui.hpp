@@ -4,6 +4,8 @@
 #include "tiles.hpp"
 #include "popups.hpp"
 #include "inputtexts.hpp"
+#include "button.hpp"
+#include <map>
 
 #define COLOR_BLACK IM_COL32(0x00, 0x00, 0x00, 0xff)
 #define COLOR_WHITE IM_COL32(0xff, 0xff, 0xff, 0xff)
@@ -47,12 +49,14 @@ private:
     bool checked_notification = true;
 
     int current_page;
+    GLuint my_image_texture[20] = { 0 };
+
     InputTexts input_email, input_password;
     std::vector<Popups> popups;
-    GLuint my_image_texture[20] = { 0 };
+    Button register_button, forgot_button, login_button, account_button, overview_button, setting_button, dictation_button;
 public:
+    std::map<std::string, Event*> events;
     Gui();
-
     ~Gui();
 
     bool isRunning() const;
@@ -65,8 +69,15 @@ public:
 
     void createFonts();
     void createPopups();
+    void createButtons();
     void loadImage();
     void deleteImage();
+
+    void toAccountPage();
+    void toOverviewPage();
+    void toDictationPage();
+    void toSettingPage();
+
     void dividePane(float div_pos, ImU32 left_color, ImU32 right_color); // devide panel to left and right
     void createTitleBar(ImU32 color); // create minimize, maximize, close button
     void createTabIcon(); // create account, overview, earphone, setting tab

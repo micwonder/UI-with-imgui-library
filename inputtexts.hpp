@@ -13,6 +13,7 @@ class InputTexts : CleanGui
 	bool status;
 	GLuint img_email, img_pass, img_eye_on, img_eye_off;
 public:
+	Event* text_edit_event;
 	InputTexts();
 	InputTexts(char* _str_id, ImVec2 _pos, ImVec2 _size, ImU32 _color_dark, ImU32 _color_light, ImU32 _color_edge, int _type, GLuint _img_email, GLuint _img_pass, GLuint _img_eye_on, GLuint _img_eye_off);
 	~InputTexts();
