@@ -17,7 +17,6 @@ public:
     using Delegate = void(*)(bool);
     std::vector<Delegate> Listners;
     void AddListener(void* listener) {
-        puts("214124");
         Listners.push_back(reinterpret_cast<Delegate>(listener));
     }
     void RemoveListener(void* listner) {

@@ -1,7 +1,7 @@
 #include "checkbox.hpp"
 
 CheckBox::CheckBox() {}
-CheckBox::CheckBox(std::string _label, ImVec2 _pos, ImVec2 _size, ImFont* _font, bool _checked) : label(_label), pos(_pos), size(_size), font(_font), checked(_checked) {}
+CheckBox::CheckBox(std::string _label, ImVec2 _pos, ImVec2 _size, ImFont* _font, bool _checked) : label(_label), pos(_pos), size(_size), font(_font), checked(_checked) { check_event = new CheckEvent; }
 void CheckBox::render(ImVec2 _pos, ImVec2 _size)
 {
 	bool last_checked = checked;

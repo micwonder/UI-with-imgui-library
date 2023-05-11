@@ -12,7 +12,8 @@ Tiles::~Tiles(){}
 void Tiles::addTile(char* str_id, ImVec2 tilepos, ImVec2 tilesize, ImU32 color){
 	curpos = windowpos + windowsize / grids * tilepos;
 	cursize = windowsize / grids * tilesize - ImVec2(spacing, spacing);
-	ImGui::GetWindowDrawList()->AddRect(curpos - ImVec2(thick, thick), curpos + cursize + ImVec2(thick, thick), color, 2.0f, 0, thick);
+	ImGui::GetWindowDrawList()->AddRect(curpos - ImVec2(thick, thick), curpos + cursize + ImVec2(thick, thick), color, thick, 0, thick * 1.5);
+	
 	ImGui::BeginChild(str_id, cursize, curpos);
 }
 

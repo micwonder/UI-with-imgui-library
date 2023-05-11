@@ -71,6 +71,7 @@ Gui::Gui()
     createButtons();
     createInputTexts();
     createSelectors();
+    createCheckBoxes();
 }
 
 Gui::~Gui()
@@ -106,6 +107,11 @@ void Gui::createButtons()
     overview_button = Button("##button_overview", { 0, 0 }, { 0, 0 }, my_image_texture[5]);
     dictation_button = Button("##button_dictation", { 0, 0 }, { 0, 0 }, my_image_texture[6]);
     setting_button = Button("##button_setting", { 0, 0 }, { 0, 0 }, my_image_texture[7]);
+    user_button = Button("##button_user", { 0, 0 }, { 0, 0 }, my_image_texture[10]);
+    minimize_button = Button("##button_minimize", { 0, 0 }, { 0, 0 }, my_image_texture[0]);
+    maximize_button = Button("##button_maximize", { 0, 0 }, { 0, 0 }, my_image_texture[1]);
+    restore_button = Button("##button_restore", { 0, 0 }, { 0, 0 }, my_image_texture[2]);
+    close_button = Button("##button_close", { 0, 0 }, { 0, 0 }, my_image_texture[3]);
 
     events["registerbuttonclicked"] = register_button.click_event;
     events["forgotbuttonclicked"] = forgot_button.click_event;
@@ -114,6 +120,11 @@ void Gui::createButtons()
     events["overviewbuttonclicked"] = overview_button.click_event;
     events["dictationbuttonclicked"] = dictation_button.click_event;
     events["settingbuttonclicked"] = setting_button.click_event;
+    events["userbuttonclicked"] = user_button.click_event;
+    events["minimizebuttonclicked"] = minimize_button.click_event;
+    events["maximizebuttonclicked"] = maximize_button.click_event;
+    events["restorebuttonclicked"] = restore_button.click_event;
+    events["closebuttonclicked"] = close_button.click_event;
 }
 void Gui::createInputTexts()
 {
@@ -145,6 +156,18 @@ void Gui::clearSelectors()
     news_selector.removeSelect();
 }
 
+void Gui::createCheckBoxes()
+{
+    remember_checkbox = CheckBox("Remember me", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
+    command_checkbox = CheckBox("Command", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
+    vad_checkbox = CheckBox("VAD", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
+    rules_checkbox = CheckBox("Rules", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
+
+    events["rememberchecked"] = remember_checkbox.check_event;
+    events["commandchecked"] = command_checkbox.check_event;
+    events["vadchecked"] = vad_checkbox.check_event;
+    events["ruleschecked"] = rules_checkbox.check_event;
+}
 void Gui::loadImage()
 {
     int my_image_width = 0;
@@ -260,26 +283,23 @@ void Gui::createWrapText(char* text, ImFont* font, float wrap_pos, ImU32 color) 
 void Gui::createTitleBar(ImU32 color) // create minimize, maximize, close button
 {
     ImVec2 size = getWindowSize();
-    ImVec2 padding = ImGui::GetStyle().FramePadding;
-    ImVec2 buttonsize = {30 - padding.x * 2, 30 - padding.x * 2};
+    ImVec2 buttonsize = { 30, 30 };
     ImGui::PushStyleColor(ImGuiCol_Button, color);
     ImGui::SetCursorScreenPos({size.x - 90, 0});
-    if (ImGui::ImageButton("##buttonminimize", (void*)(intptr_t)my_image_texture[0], buttonsize)) { minimizeWindow(); }
-    ImGui::SetCursorScreenPos({ size.x - 60, 0 });
+    if (minimize_button.render({ size.x - 90, 0 }, buttonsize)) { minimizeWindow(); }
     if (!isMaximized){
-        if (ImGui::ImageButton("##buttonmaximize", (void*)(intptr_t)my_image_texture[1], buttonsize)) {
+        if (maximize_button.render({size.x - 60, 0}, buttonsize)) {
             maximizeWindow();
             isMaximized = true;
         }
     }
     else{
-        if (ImGui::ImageButton("##buttonrestore", (void*)(intptr_t)my_image_texture[2], buttonsize)) {
+        if (restore_button.render({size.x - 60, 0}, buttonsize)) {
             restoreWindow();
             isMaximized = false;
         }
     }
-    ImGui::SetCursorScreenPos({ size.x - 30, 0 });
-    if (ImGui::ImageButton("##buttonclose", (void*)(intptr_t)my_image_texture[3], buttonsize)) { closeWindow(); }
+    if(close_button.render({size.x - 30, 0}, buttonsize)) { closeWindow(); }
     ImGui::PopStyleColor();
 }
 
@@ -296,23 +316,6 @@ void Gui::createTabIcon() // create account, overview, earphone, setting tab
     
     ImGui::PopStyleColor();
 }
-
-
-float Gui::createCheckBox(ImVec2 pos, char* title, char* check_label, bool* check_flag) // create a checkbox with title
-{
-    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-    ImGui::SetCursorScreenPos(pos);
-    ImGui::Text(title);
-    ImGui::PopFont();
-
-    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-    ImGui::SetWindowPos({pos.x, 0});
-    ImGui::Checkbox(check_label, check_flag);
-    ImGui::PopFont();
-
-    return ImGui::GetCursorPos().y;
-}
-
 
 void Gui::renderFrame()
 {
@@ -364,10 +367,12 @@ void Gui::dictationPage()
     createTabIcon();
     createText({ 100, 35 }, { 0, 0 }, "Dictation", ImGui::GetIO().Fonts->Fonts[0], COLOR_WHITE);
 
-    float pos_y = 130;
-    pos_y = createCheckBox({ 120, pos_y }, "Command", "Application Control", &checked_command);
-    pos_y = createCheckBox({ 120, pos_y }, "VAD", "Enable", &checked_vad);
-    pos_y = createCheckBox({ 120, pos_y }, "Rules", "Enable All", &checked_rules);
+    createText({ 120, 130 }, { 0, 0 }, "Application Control", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
+    command_checkbox.render(ImGui::GetWindowPos() + ImVec2(120, 0), {0, 0});
+    createText({ ImGui::GetCursorPos()}, { 0, 0 }, "Enable", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
+    vad_checkbox.render(ImGui::GetWindowPos(), { 0, 0 });
+    createText({ ImGui::GetCursorPos() }, { 0, 0 }, "Enable All", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
+    rules_checkbox.render(ImGui::GetWindowPos(), { 0, 0 });
 }
 
 void Gui::bossDictationPage()
@@ -382,8 +387,7 @@ void Gui::bossDictationPage()
     email_input.render({ size.x / 5 * 3, size.y / 5 * 2 }, { size.x / 5 * 2, size.y / 10 });
     password_input.render({ size.x / 5 * 3, size.y / 2 }, { size.x / 5 * 2, size.y / 10 });
 
-    ImGui::SetWindowPos({ size.x / 5 * 3, 0 });
-    ImGui::Checkbox("Remember me", &checked_remeber_me);
+    remember_checkbox.render({ size.x / 5 * 3, 0 }, { 0, 0 });
     register_button.render({ size.x / 5 * 4 - 20, size.y / 5 * 3 + 30 }, { 0, 0 });
     forgot_button.render({ size.x / 10 * 9 - 40, size.y / 5 * 3 + 30 }, { 0, 0 });
     
@@ -408,7 +412,7 @@ void Gui::overviewPage()
     ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_TILE);
 
     // WPM tile
-    Tiles tiles({ 100, 60 }, windowsize - ImVec2(100, 60), { 4, 7 }, 10.0f);
+    Tiles tiles({ 100, 60 }, windowsize - ImVec2(100, 60), { 4, 7 }, 20.0f, 4.0f);
     tilepos = { 0, 1 }; tilesize = { 1, 1 };
     tiles.addTile("WPM", tilepos, tilesize, COLOR_BLACK);
     {
@@ -501,10 +505,9 @@ void Gui::overviewPage()
 
     // User Button
     curpos = ImVec2(windowsize.x - 70, 35);
-    cursize = ImVec2(30, 30);
-    ImGui::SetCursorScreenPos(curpos);
+    cursize = ImVec2(35, 35);
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON_USER);
-    ImGui::ImageButton("##button_user", (void*)(intptr_t)my_image_texture[10], cursize);
+    user_button.render(curpos, cursize);
     ImGui::PopStyleColor();
 
     ImGui::PopStyleColor();
