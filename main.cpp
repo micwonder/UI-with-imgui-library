@@ -29,6 +29,17 @@ void CommandChecked(bool checked) { if (checked) { puts("command checked"); } el
 void VadChecked(bool checked) { if (checked) { puts("vad checked"); } else { puts("vad not checked"); } }
 void RulesChecked(bool checked) { if (checked) { puts("rules checked"); } else { puts("rules not checked"); } }
 
+// TODO: write your own performance test for the graph
+int graph_performance_test()
+{
+    
+}
+
+// TODO: write other performance tests for different sections of the gui
+int other_performance_test()
+{
+    
+}
 
 int main()
 {

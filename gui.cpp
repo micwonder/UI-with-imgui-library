@@ -8,6 +8,11 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
+// TODO: the Gui class is getting a bit large maybe think about how could this be more decoupled
+// maybe gui.some_page.element.action()
+// or gui.some_page.action()
+// TODO: select an architecture to solve this problem and write it to me, I will then tell you if I think this is good to go or not.
+
 ImFont* ico = nullptr;
 ImFont* tab_ico = nullptr;
 ImFont* tab_ico_two = nullptr;

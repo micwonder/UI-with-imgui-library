@@ -19,6 +19,7 @@ public:
 	void render() {}
 };
 
+// TODO: add some description
 class LineGraph : public Graph
 {
 	std::vector<float> histogram;
@@ -28,7 +29,7 @@ public:
 	void updateHistogram(std::vector<float> _historgram);
 	void render();
 };
-
+// TODO: add some description
 class VarGraph : public Graph
 {
 	std::vector<std::vector<float>> values;
