@@ -15,6 +15,7 @@ public:
 	~Tiles();
 	void addTile(char* str_id, ImVec2 tilepos, ImVec2 tilesize, ImU32 color);
 	void endTile();
+	void setSpacing();
 	ImVec2 curPos();
 	ImVec2 curSize();
 };

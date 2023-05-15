@@ -6,6 +6,7 @@
 #include "inputtexts.hpp"
 #include "button.hpp"
 #include "checkbox.hpp"
+#include "graph.hpp"
 
 #include <map>
 
@@ -49,6 +50,18 @@ private:
     Button register_button, forgot_button, login_button, account_button, overview_button, setting_button, dictation_button, user_button, minimize_button, maximize_button, restore_button, close_button;
     InputTexts email_input, password_input;
     CheckBox remember_checkbox, command_checkbox, vad_checkbox, rules_checkbox;
+    VarGraph usage_time;
+    LineGraph audio;
+
+    int wpm = 185;
+    std::vector<std::string> wpm_items = { "Per day", "Per week", "Per month", "Per year" };
+    std::vector<std::string> wpm_values = { "165", "1200", "4300", "10000" };
+    std::vector<std::string> device_items = { "Default", "Other" };
+    std::vector<std::string> news_items = { "Default notification", "Other notification" };
+    std::string history_text = "Boss: Speech to Text\nVersion 2023.001.00001\nCopyright 2023-2023 Bross LLC and its licensors. All Rights Reserved.\nBross LLC, the Bross LLC logo, and Boss: Speech to Text are either registered trademarks or trademarks of Bross LLC in the United States and/or other countries. All other trademarks are the property of their respective owners.\nSpeech Transcription Technology by OpenAI. Copyright 2015–2023. All Rights Reserved.\nThis software uses libraries from the _____ project under the ____ -license-.\nThird Party notices, terms and conditions pertaining to third party software can be found at _____ and are incorporated by reference.";
+    std::string news_text = "Version 1.0.0\nDummy Text";
+    std::vector<char*> languages = { "English", "Spanish", "Russian", "French" };
+    std::vector<float> language_values = { 0.78, 0.08, 0.07, 0.07 };
 public:
     std::map<std::string, Event*> events;
     Gui();
@@ -83,4 +96,14 @@ public:
     void createWrapText(char* text, ImFont* font, float wrap_pos, ImU32 color); //create wrap Text in specified font and color
     void createProgressBar(float value, ImVec2 size); //create progress bar
     void createLanguageSpoken(std::vector<char*> languages, std::vector<float> values, ImVec2 size);
+
+    void setWpm(int _wpm) { wpm = _wpm; }
+    void setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::string> _wpm_values);
+    void setHistoryText(std::string _history_text) { history_text = _history_text; }
+    void setNewsText(std::string _news_text) { news_text = _news_text; }
+    void setLanguageSpoken(std::vector<char*> _languages, std::vector<float> _language_values);
+    void setHistogram(std::vector<float> _histogram);
+    void setTimeState(std::vector<std::string> _states) { usage_time.updateStates(_states); }
+    void setTimeValue(int n, std::vector<std::string> _valuename, std::vector<float> _value) { usage_time.updateValue(n, _valuename, _value); }
+    void setTimeValues(std::vector<std::vector<std::string>> _valuenames, std::vector<std::vector<float>> _values) { usage_time.updateValues(_valuenames, _values); }
 };

@@ -39,8 +39,7 @@ void showAbout(bool &showWindow)
             ImGui::Text("Boss: Speech to Text");
             ImGui::Text("Version 2023.001.00001");
             ImGui::Text("Copyright 2023-2023 Bross LLC and its licensors. All Rights Reserved.");
-            ImGui::Text(
-                "Bross LLC, the Bross LLC logo, and Boss: Speech to Text are either registered trademarks or trademarks of Bross LLC in the United States and/or other countries. All other trademarks are the property of their respective owners.");
+            ImGui::Text("Bross LLC, the Bross LLC logo, and Boss: Speech to Text are either registered trademarks or trademarks of Bross LLC in the United States and/or other countries. All other trademarks are the property of their respective owners.");
             ImGui::Text("Speech Transcription Technology by OpenAI. Copyright 2015–2023. All Rights Reserved.");
             ImGui::Text("This software uses libraries from the _____ project under the ____ -license-.");
             ImGui::Text(
@@ -72,6 +71,11 @@ Gui::Gui()
     createInputTexts();
     createSelectors();
     createCheckBoxes();
+    usage_time = VarGraph({ 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[0], IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), { "Week"}, {{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}}, {{60, 30, 100, 200, 400, 350, 150}});
+    std::vector<float> histogram;
+    for (int i = 0; i < 1000; i++)
+        histogram.push_back(rand() % 255 / 255.0);
+    audio = LineGraph({ 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[0], IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), histogram);
 }
 
 Gui::~Gui()
@@ -137,10 +141,6 @@ void Gui::createInputTexts()
 
 void Gui::createSelectors()
 {
-    std::vector<std::string> wpm_items = { "Per day", "Per week", "Per month", "Per year" };
-    std::vector<std::string> device_items = { "Default", "Other" };
-    std::vector<std::string> news_items = { "Default notification", "Other notification" };
-
     wpm_selector = Selector("##button_wpm", "WPM", wpm_items, { 0, 0 }, ImVec2(70, 100), ALIGN_LEFT);
     device_selector = Selector("##button_device", "Device", device_items, { 0, 0 }, ImVec2(70, 100), ALIGN_LEFT);
     news_selector = Selector("##button_new", "News", news_items, { 0, 0 }, ImVec2(170, 100), ALIGN_RIGHT, my_image_texture[9]);
@@ -393,8 +393,7 @@ void Gui::bossDictationPage()
     
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON_LOGIN);
     ImVec2 buttonsize = { 260, 50 };
-    if (login_button.render({ size.x / 5 * 3 + (size.x / 5 * 2 - buttonsize.x) / 2, size.y / 5 * 4 + (size.y / 5 - buttonsize.y) / 2 }, buttonsize))
-        toAccountPage();
+    if (login_button.render({ size.x / 5 * 3 + (size.x / 5 * 2 - buttonsize.x) / 2, size.y / 5 * 4 + (size.y / 5 - buttonsize.y) / 2 }, buttonsize)) { toAccountPage(); }
     ImGui::PopStyleColor();
     ImGui::PopFont();
 }
@@ -421,32 +420,31 @@ void Gui::overviewPage()
         createText({0, 0}, subtiles.curSize(), "WPM", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
         subtiles.addTile("WPM_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BLACK);
-        createText({0, 0}, subtiles.curSize(), "185", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
+        char wpmtxt[10];
+        sprintf(wpmtxt, "%d", wpm);
+        createText({0, 0}, subtiles.curSize(), wpmtxt, ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
     }
     tiles.endTile();
 
     // Dictation Histroy child
-    char history[] = "Boss: Speech to Text\nVersion 2023.001.00001\nCopyright 2023-2023 Bross LLC and its licensors. All Rights Reserved.\nBross LLC, the Bross LLC logo, and Boss: Speech to Text are either registered trademarks or trademarks of Bross LLC in the United States and/or other countries. All other trademarks are the property of their respective owners.\nSpeech Transcription Technology by OpenAI. Copyright 2015–2023. All Rights Reserved.\nThis software uses libraries from the _____ project under the ____ -license-.\nThird Party notices, terms and conditions pertaining to third party software can be found at _____ and are incorporated by reference.";
     
     tilepos = { 0, 2 }; tilesize = { 3, 3 };
     tiles.addTile("Dictation History", tilepos, tilesize, COLOR_BLACK);
-    createText({ 0, 0 }, { 0, 0 }, "WPM Average", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
-    createWrapText(history, ImGui::GetIO().Fonts->Fonts[2], tiles.curSize().x, COLOR_WHITE);
+    tiles.setSpacing();
+    createText({ 0, 0 }, { 0, 0 }, "Dictation History", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
+    createWrapText(history_text.data(), ImGui::GetIO().Fonts->Fonts[2], tiles.curSize().x, COLOR_WHITE);
     tiles.endTile();
 
     // What's new child
-    char news[] = "Version 1.0.0\nDummy Text";
-
     tilepos = { 3, 2 }; tilesize = { 1, 3 };
     tiles.addTile("What's New", tilepos, tilesize, COLOR_BLACK);
+    tiles.setSpacing();
     createText({ 0, 0 }, { 0, 0 }, "What's New", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
-    createWrapText(news, ImGui::GetIO().Fonts->Fonts[2], tiles.curSize().x, COLOR_WHITE);
+    createWrapText(news_text.data(), ImGui::GetIO().Fonts->Fonts[2], tiles.curSize().x, COLOR_WHITE);
     tiles.endTile();
 
     // WPM Average child
-    std::vector<std::string> wpm_values = { "165", "1200", "4300", "10000" };
-
     tilepos = { 1, 1 }; tilesize = { 1, 1 };
     tiles.addTile("WPM Average", tilepos, tilesize, COLOR_BLACK);
     {
@@ -463,25 +461,29 @@ void Gui::overviewPage()
 
     // Language Spoken child
     tilepos = { 0, 5 }; tilesize = {2, 2};
-    std::vector<char*> languages = { "English", "Spanish", "Russian", "French" };
-    std::vector<float> values = { 0.78, 0.08, 0.07, 0.07 };
 
     tiles.addTile("Language Spoken", tilepos, tilesize, COLOR_BLACK);
-    createLanguageSpoken(languages, values, tiles.curSize());
+    tiles.setSpacing();
+    createLanguageSpoken(languages, language_values, tiles.curSize());
     tiles.endTile();
 
     // Usage Time child
     tilepos = { 2, 5 }; tilesize = { 2, 2 };
+    ImGui::SetNextWindowContentSize({usage_time.getContentX(), 0});
     tiles.addTile("Usage Time", tilepos, tilesize, COLOR_BLACK);
+    usage_time.updatePosSize(tiles.curPos(), tiles.curSize());
+    usage_time.updateColor(IM_COL32(0x66, 0xa6, 0xff, 0xff), IM_COL32(0x89, 0xf7, 0xfe, 0xff), IM_COL32(0x21, 0x24, 0x30, 0xff));
+    usage_time.updateFont(ImGui::GetIO().Fonts->Fonts[2]);
+    usage_time.render();
     tiles.endTile();
 
     // Audio File
     tilepos = { 3, 1 }; tilesize = { 1, 1 };
-    tiles.addTile("What's New", tilepos, tilesize, COLOR_AUDIO_EDGE);
-    // add graph of audio here
+    tiles.addTile("AUDIO", tilepos, tilesize, IM_COL32(0x89, 0xf7, 0xfe, 0xff));
     tiles.endTile();
-    ImGui::SetCursorScreenPos(tiles.curPos());
-    ImGui::Image((void*)(intptr_t)my_image_texture[8], tiles.curSize());
+    audio.updatePosSize(tiles.curPos(), tiles.curSize());
+    audio.updateColor(IM_COL32(0x66, 0xa6, 0xff, 0xff), COLOR_AUDIO_GRAPH, IM_COL32(0x21, 0x24, 0x30, 0xff));
+    audio.render();
 
     ImVec2 curpos, cursize;
     //Input device
@@ -510,5 +512,32 @@ void Gui::overviewPage()
     user_button.render(curpos, cursize);
     ImGui::PopStyleColor();
 
+
     ImGui::PopStyleColor();
+}
+
+void Gui::setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::string> _wpm_values)
+{
+    wpm_items.clear();
+    wpm_values.clear();
+    for (int i = 0; i < _wpm_items.size(); i++)
+        wpm_items.push_back(_wpm_items[i]);
+    for (int i = 0; i < _wpm_values.size(); i++)
+        wpm_values.push_back(_wpm_values[i]);
+    wpm_selector.updateValue(wpm_items);
+}
+
+
+void Gui::setLanguageSpoken(std::vector<char*> _languages, std::vector<float> _language_values)
+{
+    languages.clear();
+    language_values.clear();
+    for (int i = 0; i < _languages.size(); i++)
+        languages.push_back(_languages[i]);
+    for (int i = 0; i < _language_values.size(); i++)
+        language_values.push_back(_language_values[i]);
+}
+
+void Gui::setHistogram(std::vector<float> _histogram) {
+    audio.updateHistogram(_histogram);
 }

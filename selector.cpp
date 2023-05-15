@@ -98,3 +98,10 @@ bool Selector::render()
 int Selector::currentIndex() { return current_index; }
 std::string Selector::currentItem() { return current_item; }
 void Selector::removeSelect() { button_clicked = false; }
+void Selector::updateValue(std::vector<std::string> _items) {
+    items.clear();
+    for (int i = 0; i < _items.size(); i++)
+        items.push_back(_items[i]);
+    current_index = 0;
+    current_item = items[0];
+}

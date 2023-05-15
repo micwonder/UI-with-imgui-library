@@ -29,10 +29,10 @@ void CommandChecked(bool checked) { if (checked) { puts("command checked"); } el
 void VadChecked(bool checked) { if (checked) { puts("vad checked"); } else { puts("vad not checked"); } }
 void RulesChecked(bool checked) { if (checked) { puts("rules checked"); } else { puts("rules not checked"); } }
 
+
 int main()
 {
     auto gui = Gui();
-
     gui.events["registerbuttonclicked"]->AddListener(RegisterButtonClicked);
     gui.events["forgotbuttonclicked"]->AddListener(ForgotButtonClicked);
     gui.events["loginbuttonclicked"]->AddListener(LoginButtonClicked);

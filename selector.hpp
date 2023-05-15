@@ -31,4 +31,5 @@ public:
 	int currentIndex();
 	void removeSelect();
 	std::string currentItem();
+	void updateValue(std::vector<std::string> _items);
 };
