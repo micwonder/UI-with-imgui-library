@@ -99,6 +99,8 @@ public:
 
     void setWpm(int _wpm) { wpm = _wpm; }
     void setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::string> _wpm_values);
+    void setDevice(std::vector<std::string> _device_items);
+    void setNews(std::vector<std::string> _news_items);
     void setHistoryText(std::string _history_text) { history_text = _history_text; }
     void setNewsText(std::string _news_text) { news_text = _news_text; }
     void setLanguageSpoken(std::vector<char*> _languages, std::vector<float> _language_values);

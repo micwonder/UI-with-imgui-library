@@ -19,7 +19,7 @@ public:
 	void render() {}
 };
 
-// TODO: add some description
+// Draw the graph with lines (histogram) the value must be in range of (0, 1)
 class LineGraph : public Graph
 {
 	std::vector<float> histogram;
@@ -29,7 +29,7 @@ public:
 	void updateHistogram(std::vector<float> _historgram);
 	void render();
 };
-// TODO: add some description
+// Draw Var graph with values (This graph is for usage time)
 class VarGraph : public Graph
 {
 	std::vector<std::vector<float>> values;

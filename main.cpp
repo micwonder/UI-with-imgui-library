@@ -30,15 +30,47 @@ void VadChecked(bool checked) { if (checked) { puts("vad checked"); } else { put
 void RulesChecked(bool checked) { if (checked) { puts("rules checked"); } else { puts("rules not checked"); } }
 
 // TODO: write your own performance test for the graph
-int graph_performance_test()
+void graph_performance_test(Gui& gui)
 {
-    
+    // update Histogram
+    std::vector<float> hist;
+    for (int i = 0; i < 1000; i++)
+        hist.push_back(rand() % 255 / 255.0);
+    gui.setHistogram(hist);
+
+    // update Usage time graph
+    std::vector<std::string> states = { "Week", "Month", "Year" };
+    std::vector<std::vector<std::string>> valuenames = { { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
+        , {"First Week", "Second Week", "Third Week", "Fourth Week"}
+        , {"Januray", "Feburay", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+        };
+    std::vector<std::vector<float>> values = { {100, 200, 400, 300, 100, 200, 300}
+        ,{4000, 3000, 2000, 1000}
+        ,{30000, 20000, 15000, 30000, 40000, 50000, 20000, 30000, 40000, 70000, 80000, 10000} };
+    gui.setTimeState(states);
+    gui.setTimeValues(valuenames, values);
+    gui.setTimeValue(1, valuenames[1], values[1]);
 }
 
 // TODO: write other performance tests for different sections of the gui
-int other_performance_test()
+void other_performance_test(Gui &gui)
 {
-    
+    // set WPM
+    gui.setWpm(300);
+    // Set Wpm Average
+    std::vector<std::string> wpm_items = { "Per Day", "Per Week", "Per Month" };
+    std::vector<std::string> wpm_values = { "400", "3000", "13000" };
+    gui.setWpmAverage(wpm_items, wpm_values);
+    // Set history text
+    gui.setHistoryText("This is history text testing");
+    //set What's new text
+    gui.setNewsText("This is news text testing");
+    // update notification items
+    gui.setNews({ "Test News1", "Test News2", "Test News3" });
+    // update device items
+    gui.setDevice({ "Test Device1", "Test Device2", "Test Device3" });
+    // update spoken language rates
+    gui.setLanguageSpoken({ "English", "German", "Spanish" }, { 0.56, 0.33, 0.12 });
 }
 
 int main()
@@ -69,6 +101,8 @@ int main()
     gui.events["vadchecked"]->AddListener(VadChecked);
     gui.events["ruleschecked"]->AddListener(RulesChecked);
 
+    graph_performance_test(gui);
+    other_performance_test(gui);
     while (gui.isRunning())
     {
         gui.renderFrame();

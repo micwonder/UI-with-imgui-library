@@ -133,7 +133,6 @@ int main(int, char**)
     bool done = false;
     while (!done)
     {
-
         MSG msg;
         while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
         {
@@ -201,7 +200,7 @@ int main(int, char**)
                 ImGui::SetCursorPos(ImVec2(0, 90));
 
                 ImGui::BeginGroup();
-
+                
                 if (ImGui::Tab("A", 0 == tabs, ImVec2(45, 45)) && tabs != 0) {
                     active_tab = true;
                     tabs = 0;

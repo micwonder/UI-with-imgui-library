@@ -36,6 +36,13 @@ VarGraph::VarGraph(ImVec2 _pos, ImVec2 _size, ImFont* _font, ImU32 _darkcolor, I
 		values.push_back(temp);
 	}
 }
+
+void VarGraph::updateStates(std::vector<std::string> _states)
+{
+    states.clear();
+    for (int i = 0; i < _states.size(); i++)
+        states.push_back(_states[i]);
+}
 void VarGraph::updateValue(int n, std::vector<std::string> _valuename, std::vector<float> _value) {
 	if (n >= values.size())
 		return;

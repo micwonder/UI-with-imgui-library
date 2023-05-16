@@ -33,12 +33,11 @@ private:
     POINT mouse_start_pos;
     ImVec2 window_start_pos = { 0, 0 };
     bool mouse_clicked = false;
-
 protected:
     GLFWwindow *window;
-
 public:
     bool isclose = false;
+    bool render_state = true;
     int init_glfw();
     int init_im_gui();
 
