@@ -400,10 +400,11 @@ void Gui::loginPage()
 
     createText({ size.x / 5 * 3, size.y / 5 * 3 }, { size.x / 5 * 2, size.y / 10 }, error_text.data(), ImGui::GetIO().Fonts->Fonts[1], IM_COL32(0xff, 0x00, 0x00, 0xff));
     
-    remember_checkbox.render({ size.x / 5 * 3, (ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2) / 2 }, { 0, 0 });
-    register_button.render({ size.x / 5 * 4 - 20, size.y / 10 * 7 + offset.y}, {0, 0});
-    forgot_button.render({ size.x / 10 * 9 - 40, size.y / 10 * 7 + offset.y }, { 0, 0 });
-    
+    remember_checkbox.render({ size.x / 5 * 3, 0 }, { 0, 0 });
+    float t = ImGui::GetCursorPos().y - ImGui::GetFrameHeightWithSpacing();
+    register_button.render({ size.x / 5 * 4 - 20, t}, {0, 0});
+    forgot_button.render({ size.x / 10 * 9 - 40, t }, { 0, 0 });
+
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON_LOGIN);
     ImVec2 buttonsize = { 260, 50 };
     if (login_button.render({ size.x / 5 * 3 + (size.x / 5 * 2 - buttonsize.x) / 2, size.y / 5 * 4 + (size.y / 5 - buttonsize.y) / 2 }, buttonsize)) {

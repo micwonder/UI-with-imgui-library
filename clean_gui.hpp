@@ -32,7 +32,7 @@ private:
     HWND hwnd;
     char* title = "Boss";
     char* icon_image_path = "C:/dev/Resources/Icons/BossIcons/BossIcon-1.png";
-    int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 1000, h = 700, content_w = 1000, content_h = 700;
+    int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 1100, h = 700, content_w = 1100, content_h = 700;
     UINT dpiX, dpiY;
     int SetWindowsTitleBar();
 

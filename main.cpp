@@ -44,7 +44,7 @@ void graph_performance_test(Gui& gui)
         , {"First Week", "Second Week", "Third Week", "Fourth Week"}
         , {"Januray", "Feburay", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
         };
-    std::vector<std::vector<float>> values = { {100, 200, 400, 300, 100, 200, 300}
+    std::vector<std::vector<float>> values = { {100, 200, 400, 300, 100, 200, 300}  
         ,{4000, 3000, 2000, 1000}
         ,{30000, 20000, 15000, 30000, 40000, 50000, 20000, 30000, 40000, 70000, 80000, 10000} };
     gui.setTimeState(states);
