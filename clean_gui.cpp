@@ -125,7 +125,6 @@ int CleanGui::start_clean_window()
                 window_pos_x = init_x - mouse_start_pos.x + mouse_pos.x;
                 window_pos_y = init_y - mouse_start_pos.y + mouse_pos.y;
                 glfwSetWindowPos(window, window_pos_x, window_pos_y);
-                puts("MOVING");
             }
         }
         else if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
@@ -149,14 +148,14 @@ int CleanGui::start_clean_window()
             re_pos_y = pt.y;
             re_size_x = window_w;
             re_size_y = window_h;
-            if (curx <= 10) { resize_clicked = LEFT; }
-            if (curx >= window_w - 10) { resize_clicked = RIGHT; }
-            if (cury <= 10) { resize_clicked = TOP; }
-            if (cury >= window_h - 10) { resize_clicked = BOTTOM; }
-            if (curx <= 10 && cury <= 10) { resize_clicked = LEFTTOP; }
-            if (curx <= 10 && cury >= window_h - 10) { resize_clicked = LEFTBOTTOM; }
-            if (curx >= window_w - 10 && cury <= 10) { resize_clicked = RIGHTTOP; }
-            if (curx >= window_w - 10 && cury >= window_h - 10) { resize_clicked = RIGHTBOTTOM; }
+            if (curx <= 3) { resize_clicked = LEFT; }
+            if (curx >= window_w - 3) { resize_clicked = RIGHT; }
+            if (cury <= 3) { resize_clicked = TOP; }
+            if (cury >= window_h - 3) { resize_clicked = BOTTOM; }
+            if (curx <= 3 && cury <= 3) { resize_clicked = LEFTTOP; }
+            if (curx <= 3 && cury >= window_h - 3) { resize_clicked = LEFTBOTTOM; }
+            if (curx >= window_w - 3 && cury <= 3) { resize_clicked = RIGHTTOP; }
+            if (curx >= window_w - 3 && cury >= window_h - 3) { resize_clicked = RIGHTBOTTOM; }
         }
         if (resize_clicked == LEFT) {
             window_pos_x = pt.x;
@@ -200,7 +199,7 @@ int CleanGui::start_clean_window()
         }
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) { resize_clicked = 0; }
-
+    printf("%d %d\n", w, h);
     if (!isMaximized) {
         glfwSetWindowPos(window, window_pos_x, window_pos_y);
         w = w >= content_w ? w : content_w;
