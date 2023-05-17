@@ -114,7 +114,7 @@ int CleanGui::start_clean_window()
         glfwSetWindowSize(window, xScreenResolution, yScreenResolution);
         return 0;
     }
-    if (ImGui::IsWindowHovered() && resize_clicked == 0)
+    if (resize_clicked == 0)
     {
         POINT mouse_pos;
         GetCursorPos(&mouse_pos);
@@ -149,13 +149,9 @@ int CleanGui::start_clean_window()
     }
     else
         mouse_clicked = false;
-
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouse_clicked && !mouse_dragging)
+    printf("%d %d\n", mouse_clicked, mouse_dragging);
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouse_dragging)
     {
-        if (mouse_clicked == true)
-        {
-            resize_clicked = 0;
-        }
         POINT pt;
         GetCursorPos(&pt);
         if (resize_clicked == 0)
