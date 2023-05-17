@@ -66,11 +66,13 @@ void other_performance_test(Gui &gui)
     //set What's new text
     gui.setNewsText("This is news text testing");
     // update notification items
-    gui.setNews({ "Test News1", "Test News2", "Test News3" });
+    gui.setNews({ "Test News1", "Test News2", "Test News3","Test News4", "Test News5", "Test News6","Test News7", "Test News8", "Test NewsLongLong" });
     // update device items
     gui.setDevice({ "Test Device1", "Test Device2", "Test Device3" });
     // update spoken language rates
-    gui.setLanguageSpoken({ "English", "German", "Spanish" }, { 0.56, 0.33, 0.12 });
+    gui.setLanguageSpoken({ "English", "German", "Spanish", "English", "German", "Spanish" }, { 0.56, 0.33, 0.12, 0.56, 0.33, 0.12 });
+
+    gui.setNotification(false);
 }
 
 int main()

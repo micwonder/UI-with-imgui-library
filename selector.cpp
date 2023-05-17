@@ -49,10 +49,12 @@ void Selector::doModal(ImVec2 _pos, ImVec2 _size)
         buttonsize = ImGui::CalcTextSize(current_item.data());
     else
         buttonsize = ImVec2(30, 30);
+    popupsize.x = getWidth();
     if (align == ALIGN_LEFT)
         popuppos = buttonpos + ImVec2(0, buttonsize.y);
     else
         popuppos = buttonpos + buttonsize - ImVec2(popupsize.x, 0);
+    popuppos.y += 5;
     if (type == TEXT_BUTTON) {
         ImGui::SetWindowPos(buttonpos);
         if (ImGui::TextButton(button_id.data(), current_item.data())) { button_clicked = true; }
@@ -71,11 +73,14 @@ bool Selector::render()
 {
     bool selected = true;
     int past_index = current_index;
+    
     ImGui::SetNextWindowSize(popupsize);
     ImGui::SetNextWindowPos(popuppos);
+    ImGui::SetNextWindowContentSize({ popupsize.x, getContentHeight() });
     ImGui::OpenPopup(popup_id.data());
     if (ImGui::BeginPopup(popup_id.data(), ImGuiWindowFlags_ChildWindow))
     {
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(ImGui::GetStyle().ItemSpacing.x, 0));
         for (int n = 0; n < items.size(); n++)
         {
             bool is_selected = (current_item == items[n]);
@@ -90,6 +95,7 @@ bool Selector::render()
             if (is_selected)
                 ImGui::SetItemDefaultFocus();
         }
+        ImGui::PopStyleVar();
         ImGui::EndPopup();
     }
     return selected;
@@ -104,4 +110,15 @@ void Selector::updateValue(std::vector<std::string> _items) {
         items.push_back(_items[i]);
     current_index = 0;
     current_item = items[0];
+}
+
+float Selector::getWidth() {
+    float maxWidth = 0;
+    for (int i = 0; i < items.size(); i++)
+        if (maxWidth < ImGui::CalcTextSize(items[i].data()).x)
+            maxWidth = ImGui::CalcTextSize(items[i].data()).x;
+    return maxWidth + 15;
+}
+float Selector::getContentHeight() {
+    return ImGui::CalcTextSize(items[0].data()).y * items.size() + 10;
 }

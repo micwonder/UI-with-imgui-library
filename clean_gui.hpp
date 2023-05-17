@@ -17,25 +17,38 @@
 #include "imgui.h"
 #include "event.hpp"
 
+#define LEFTTOP 1
+#define LEFT 2
+#define LEFTBOTTOM 3
+#define BOTTOM 4
+#define RIGHTBOTTOM 5
+#define RIGHT 6
+#define RIGHTTOP 7
+#define TOP 8
+
 class CleanGui
 {
 private:
     HWND hwnd;
-    char *title = "Boss";
-    char *icon_image_path = "C:/dev/Resources/Icons/BossIcons/BossIcon-1.png";
-    int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 1100, h = 700;
+    char* title = "Boss";
+    char* icon_image_path = "C:/dev/Resources/Icons/BossIcons/BossIcon-1.png";
+    int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 1000, h = 700, content_w = 1000, content_h = 700;
+    UINT dpiX, dpiY;
     int SetWindowsTitleBar();
 
-    int window_pos_x = 100;
+    int window_pos_x = 500;
     int window_pos_y = 100;
     int init_x = 0;
     int init_y = 0;
     POINT mouse_start_pos;
     ImVec2 window_start_pos = { 0, 0 };
     bool mouse_clicked = false;
+    int resize_clicked = 0;
+    double re_pos_x, re_pos_y, re_size_x, re_size_y;
 protected:
-    GLFWwindow *window;
+    GLFWwindow* window;
 public:
+    bool isMaximized = false;
     bool isclose = false;
     bool render_state = true;
     int init_glfw();

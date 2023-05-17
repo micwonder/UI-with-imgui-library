@@ -40,11 +40,12 @@ class Gui : public CleanGui
 {
 private:
     //ImFont *font;
-    bool isMaximized = false;
 
     int current_page;
     GLuint my_image_texture[20] = { 0 };
     bool checked_notification = true;
+    ImVec2 lang_content;
+    std::string error_text;
 
     Selector wpm_selector, device_selector, news_selector;
     Button register_button, forgot_button, login_button, account_button, overview_button, setting_button, dictation_button, user_button, minimize_button, maximize_button, restore_button, close_button;
@@ -70,7 +71,7 @@ public:
     bool isRunning() const;
     void renderFrame();
     void dictationPage();
-    void bossDictationPage();
+    void loginPage();
     void accountPage();
     void settingPage();
     void overviewPage();
@@ -108,4 +109,5 @@ public:
     void setTimeState(std::vector<std::string> _states) { usage_time.updateStates(_states); }
     void setTimeValue(int n, std::vector<std::string> _valuename, std::vector<float> _value) { usage_time.updateValue(n, _valuename, _value); }
     void setTimeValues(std::vector<std::vector<std::string>> _valuenames, std::vector<std::vector<float>> _values) { usage_time.updateValues(_valuenames, _values); }
+    void setNotification(bool checked) { checked_notification = checked; }
 };

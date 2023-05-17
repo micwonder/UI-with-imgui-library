@@ -9,13 +9,16 @@ class Tiles
 	ImVec2 cursize;
 	float spacing;
 	float thick;
+	float curve;
 public:
 	Tiles();
-	Tiles(ImVec2 _windowpos, ImVec2 _windowsize, ImVec2 _grids = ImVec2(1, 1), float _spacing = 5.0f, float _sick = 2.0f);
+	Tiles(ImVec2 _windowpos, ImVec2 _windowsize, ImVec2 _grids = ImVec2(1, 1), float _spacing = 5.0f, float _sick = 0.0f, float _curve = 0.0f);
 	~Tiles();
 	void addTile(char* str_id, ImVec2 tilepos, ImVec2 tilesize, ImU32 color);
 	void endTile();
 	void setSpacing();
 	ImVec2 curPos();
 	ImVec2 curSize();
+	ImVec2 curThick() { return { thick, thick }; }
+	ImVec2 curCurve() { return { curve, curve }; }
 };

@@ -77,10 +77,7 @@ Gui::Gui()
     createSelectors();
     createCheckBoxes();
     usage_time = VarGraph({ 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[0], IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), { "Week"}, {{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}}, {{60, 30, 100, 200, 400, 350, 150}});
-    std::vector<float> histogram;
-    for (int i = 0; i < 1000; i++)
-        histogram.push_back(rand() % 255 / 255.0);
-    audio = LineGraph({ 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[0], IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), histogram);
+    audio = LineGraph({ 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[0], IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), IM_COL32(0, 0, 0, 0), {0.1, 0.2, 0.3, 0.4, 0.5, 0.1, 0.2, 0.3});
 }
 
 Gui::~Gui()
@@ -111,7 +108,7 @@ void Gui::createButtons()
 {
     register_button = Button("##Register", "Register", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], BUTTON_TEXT);
     forgot_button = Button("##Forgot_Password", "Forgot Password?", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], BUTTON_TEXT);
-    login_button = Button("##Button", "Login", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], BUTTON_NORMAL);
+    login_button = Button("##Button", "Login", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], BUTTON_NORMAL, 10.0f);
     account_button = Button("##button_account", { 0, 0 }, { 0, 0 }, my_image_texture[4]);
     overview_button = Button("##button_overview", { 0, 0 }, { 0, 0 }, my_image_texture[5]);
     dictation_button = Button("##button_dictation", { 0, 0 }, { 0, 0 }, my_image_texture[6]);
@@ -240,8 +237,11 @@ void Gui::createProgressBar(float value, ImVec2 size) //create progress bar
 void Gui::createLanguageSpoken(std::vector<char*> languages, std::vector<float> values, ImVec2 size)
 {
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+    ImVec2 stpos = ImGui::GetCursorScreenPos();
     ImGui::Text("Languages Spoken");
+    ImVec2 pos = ImGui::GetCursorScreenPos();
     for (int i = 0; i < languages.size(); ++i) {
+        ImGui::SetCursorScreenPos(pos);
         char value[10];
         sprintf(value, "%0.f", values[i] * 100);
         strcat(value, "%%");
@@ -249,9 +249,12 @@ void Gui::createLanguageSpoken(std::vector<char*> languages, std::vector<float> 
         ImGui::Text(languages[i]);
         ImGui::SameLine(0, 0);
         createProgressBar(values[i], ImVec2(width, 7));
+        pos += ImVec2(0, ImGui::CalcTextSize(languages[i]).y + 10);
         ImGui::SameLine(0, width + 10);
         ImGui::Text(value);
     }
+    lang_content = ImGui::GetCursorScreenPos() - stpos;
+    
     ImGui::PopFont();
 }
 
@@ -264,6 +267,7 @@ void Gui::dividePane(float div_pos, ImU32 left_color, ImU32 right_color) // devi
 void Gui::createText(ImVec2 pos, ImVec2 size, char* text, ImFont* font, ImU32 color) //create Text in specified font and color
 {
     ImGui::PushFont(font);
+    ImGui::PushStyleColor(ImGuiCol_Text, color);
     if(size.x == 0 && size.y == 0)
         ImGui::SetCursorPos(pos);
     else
@@ -272,6 +276,7 @@ void Gui::createText(ImVec2 pos, ImVec2 size, char* text, ImFont* font, ImU32 co
         ImGui::SetCursorPos({ pos.x + (size.x - textsize.x) / 2, pos.y + (size.y - textsize.y) / 2 });
     }
     ImGui::Text(text);
+    ImGui::PopStyleColor();
     ImGui::PopFont();
 }
 void Gui::createWrapText(char* text, ImFont* font, float wrap_pos, ImU32 color) //create wrap Text in specified font and color
@@ -329,7 +334,7 @@ void Gui::renderFrame()
     switch (current_page)
     {
         case PAGE_LOGIN:
-            bossDictationPage();
+            loginPage();
             break;
         case PAGE_OVERVIEW:
             overviewPage();
@@ -380,25 +385,40 @@ void Gui::dictationPage()
     rules_checkbox.render(ImGui::GetWindowPos(), { 0, 0 });
 }
 
-void Gui::bossDictationPage()
+void Gui::loginPage()
 {
     ImVec2 size = getWindowSize();
+    ImVec2 offset = { 0, (1080 - size.y) / 1080 * 40 + 25 };
     dividePane(size.x / 5 * 3, COLOR_GUI_LOGIN_LEFT, COLOR_GUI_LOGIN_RIGHT);
     createTitleBar(COLOR_GUI_LOGIN_RIGHT);
     createText({ 0, 0 }, { size.x / 5 * 3, size.y / 5 }, "Boss Dictation", ImGui::GetIO().Fonts->Fonts[9], COLOR_TITLE);
     createText({ size.x / 5 * 3, size.y / 5 }, { size.x / 5 * 2, size.y / 5 }, "Welcome", ImGui::GetIO().Fonts->Fonts[9], COLOR_TITLE);
 
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-    email_input.render({ size.x / 5 * 3, size.y / 5 * 2 }, { size.x / 5 * 2, size.y / 10 });
-    password_input.render({ size.x / 5 * 3, size.y / 2 }, { size.x / 5 * 2, size.y / 10 });
+    email_input.render({ size.x / 5 * 3, size.y / 5 * 2 }, { size.x / 5 * 2, size.y / 10 }, COLOR_GUI_LOGIN_RIGHT);
+    password_input.render({ size.x / 5 * 3, size.y / 2 }, { size.x / 5 * 2, size.y / 10 }, COLOR_GUI_LOGIN_RIGHT);
 
-    remember_checkbox.render({ size.x / 5 * 3, 0 }, { 0, 0 });
-    register_button.render({ size.x / 5 * 4 - 20, size.y / 5 * 3 + 30 }, { 0, 0 });
-    forgot_button.render({ size.x / 10 * 9 - 40, size.y / 5 * 3 + 30 }, { 0, 0 });
+    createText({ size.x / 5 * 3, size.y / 5 * 3 }, { size.x / 5 * 2, size.y / 10 }, error_text.data(), ImGui::GetIO().Fonts->Fonts[1], IM_COL32(0xff, 0x00, 0x00, 0xff));
+    
+    remember_checkbox.render({ size.x / 5 * 3, (ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2) / 2 }, { 0, 0 });
+    register_button.render({ size.x / 5 * 4 - 20, size.y / 10 * 7 + offset.y}, {0, 0});
+    forgot_button.render({ size.x / 10 * 9 - 40, size.y / 10 * 7 + offset.y }, { 0, 0 });
     
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON_LOGIN);
     ImVec2 buttonsize = { 260, 50 };
-    if (login_button.render({ size.x / 5 * 3 + (size.x / 5 * 2 - buttonsize.x) / 2, size.y / 5 * 4 + (size.y / 5 - buttonsize.y) / 2 }, buttonsize)) { toAccountPage(); }
+    if (login_button.render({ size.x / 5 * 3 + (size.x / 5 * 2 - buttonsize.x) / 2, size.y / 5 * 4 + (size.y / 5 - buttonsize.y) / 2 }, buttonsize)) {
+        bool email_empty = false, pass_empty = false;
+        if (password_input.isEmpty()) {
+            error_text = "Password is required!";
+            pass_empty = true;
+        }
+        if (email_input.isEmpty()) {
+            error_text = "Email is required!";
+            email_empty = true;
+        }
+        if (!email_empty && !pass_empty)
+            toAccountPage();
+    }
     ImGui::PopStyleColor();
     ImGui::PopFont();
 }
@@ -416,11 +436,11 @@ void Gui::overviewPage()
     ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_TILE);
 
     // WPM tile
-    Tiles tiles({ 100, 60 }, windowsize - ImVec2(100, 60), { 4, 7 }, 20.0f, 4.0f);
+    Tiles tiles({ 100, 60 }, windowsize - ImVec2(100, 60), { 4, 7 }, 20.0f, 5.0f, 5.0f);
     tilepos = { 0, 1 }; tilesize = { 1, 1 };
     tiles.addTile("WPM", tilepos, tilesize, COLOR_BLACK);
     {
-        Tiles subtiles({0, 0}, tiles.curSize(), {1, 2}, 0.0f, 0.0f);
+        Tiles subtiles(tiles.curThick(), tiles.curSize(), {1, 2}, 0.0f, 0.0f);
         subtiles.addTile("WPM_CHILD1", { 0, 0 }, { 1, 1 }, COLOR_BLACK);
         createText({0, 0}, subtiles.curSize(), "WPM", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
@@ -453,7 +473,7 @@ void Gui::overviewPage()
     tilepos = { 1, 1 }; tilesize = { 1, 1 };
     tiles.addTile("WPM Average", tilepos, tilesize, COLOR_BLACK);
     {
-        Tiles subtiles({ 0, 0 }, tiles.curSize(), { 1, 2 }, 0.0f, 0.0f);
+        Tiles subtiles(tiles.curThick(), tiles.curSize(), {1, 2}, 0.0f, 0.0f);
         subtiles.addTile("Average_CHILD1", { 0, 0 }, { 1, 1 }, COLOR_BLACK);
         createText({ 0, 0 }, subtiles.curSize(), "WPM Average", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
@@ -466,7 +486,7 @@ void Gui::overviewPage()
 
     // Language Spoken child
     tilepos = { 0, 5 }; tilesize = {2, 2};
-
+    ImGui::SetNextWindowContentSize({ 0, lang_content.y });
     tiles.addTile("Language Spoken", tilepos, tilesize, COLOR_BLACK);
     tiles.setSpacing();
     createLanguageSpoken(languages, language_values, tiles.curSize());
@@ -476,6 +496,7 @@ void Gui::overviewPage()
     tilepos = { 2, 5 }; tilesize = { 2, 2 };
     ImGui::SetNextWindowContentSize({usage_time.getContentX(), 0});
     tiles.addTile("Usage Time", tilepos, tilesize, COLOR_BLACK);
+    tiles.setSpacing();
     usage_time.updatePosSize(tiles.curPos(), tiles.curSize());
     usage_time.updateColor(IM_COL32(0x66, 0xa6, 0xff, 0xff), IM_COL32(0x89, 0xf7, 0xfe, 0xff), IM_COL32(0x21, 0x24, 0x30, 0xff));
     usage_time.updateFont(ImGui::GetIO().Fonts->Fonts[2]);
@@ -518,7 +539,6 @@ void Gui::overviewPage()
     ImGui::PopStyleColor();
 
     ImGui::PopStyleColor();
-    render_state = false;
 }
 
 void Gui::setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::string> _wpm_values)

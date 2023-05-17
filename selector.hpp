@@ -32,4 +32,6 @@ public:
 	void removeSelect();
 	std::string currentItem();
 	void updateValue(std::vector<std::string> _items);
+	float getWidth();
+	float getContentHeight();
 };

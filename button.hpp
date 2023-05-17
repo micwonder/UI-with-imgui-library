@@ -17,11 +17,12 @@ class Button
 	std::string text;
 	ImFont* font;
 	GLuint image;
+	float curve;
 public:
 	Event* click_event;
 	Button();
 	~Button();
-	Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type);
-	Button(std::string _id, ImVec2 _pos, ImVec2 _size, GLuint _image);
+	Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type, float _curve = 0.0f);
+	Button(std::string _id, ImVec2 _pos, ImVec2 _size, GLuint _image, float _curve = 10.0f);
 	bool render(ImVec2 _pos, ImVec2 _size);
 };

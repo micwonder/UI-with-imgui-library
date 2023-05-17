@@ -9,6 +9,9 @@
 
 #include "stb_image.h"
 
+#include <ShellScalingApi.h>
+#pragma comment(lib, "User32.lib")
+
 #include <GL/gl.h>
 
 bool CleanGui::LoadTextureFromFile(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
@@ -40,7 +43,7 @@ bool CleanGui::LoadTextureFromFile(const char* filename, GLuint* out_texture, in
     *out_texture = image_texture;
     *out_width = image_width;
     *out_height = image_height;
-    
+
     return true;
 }
 
@@ -94,15 +97,14 @@ int CleanGui::start_clean_window()
     ImGui::SetNextWindowSize(ImVec2(static_cast<float>(window_w), static_cast<float>(window_h)));
 
     //MainSpace
-    ImGui::SetNextWindowPos({0, 0});
-    ImGui::SetNextWindowSizeConstraints(ImVec2(1100, 700), ImVec2(FLT_MAX, FLT_MAX));
+    ImGui::SetNextWindowPos({ 0, 0 });
+    ImGui::SetNextWindowSizeConstraints(ImVec2(content_w, content_h), ImVec2(FLT_MAX, FLT_MAX));
 
     bool select = true;
 
-    ImGui::Begin(title, &select,
-                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
-                 ImGuiWindowFlags_NoBringToFrontOnFocus);
-    if (ImGui::IsWindowHovered())
+    ImGui::Begin(title, &select, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoBringToFrontOnFocus);
+    if (ImGui::IsWindowHovered() && resize_clicked == 0)
     {
         POINT mouse_pos;
         GetCursorPos(&mouse_pos);
@@ -123,6 +125,7 @@ int CleanGui::start_clean_window()
                 window_pos_x = init_x - mouse_start_pos.x + mouse_pos.x;
                 window_pos_y = init_y - mouse_start_pos.y + mouse_pos.y;
                 glfwSetWindowPos(window, window_pos_x, window_pos_y);
+                puts("MOVING");
             }
         }
         else if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
@@ -133,9 +136,83 @@ int CleanGui::start_clean_window()
     }
     else
         mouse_clicked = false;
-    w = (int)ImGui::GetWindowSize().x >= 1100 ? (int)ImGui::GetWindowSize().x : 1100;
-    h = (int)ImGui::GetWindowSize().y >= 700 ? (int)ImGui::GetWindowSize().y : 700;
-    glfwSetWindowSize(window, w, h);
+
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        double curx, cury;
+        glfwGetCursorPos(window, &curx, &cury);
+        POINT pt;
+        GetCursorPos(&pt);
+        if (resize_clicked == 0)
+        {
+            re_pos_x = pt.x;
+            re_pos_y = pt.y;
+            re_size_x = window_w;
+            re_size_y = window_h;
+            if (curx <= 10) { resize_clicked = LEFT; }
+            if (curx >= window_w - 10) { resize_clicked = RIGHT; }
+            if (cury <= 10) { resize_clicked = TOP; }
+            if (cury >= window_h - 10) { resize_clicked = BOTTOM; }
+            if (curx <= 10 && cury <= 10) { resize_clicked = LEFTTOP; }
+            if (curx <= 10 && cury >= window_h - 10) { resize_clicked = LEFTBOTTOM; }
+            if (curx >= window_w - 10 && cury <= 10) { resize_clicked = RIGHTTOP; }
+            if (curx >= window_w - 10 && cury >= window_h - 10) { resize_clicked = RIGHTBOTTOM; }
+        }
+        if (resize_clicked == LEFT) {
+            window_pos_x = pt.x;
+            w = re_size_x - pt.x + re_pos_x;
+            if (w < content_w) { w = content_w; window_pos_x = re_pos_x; }
+        }
+        if (resize_clicked == RIGHT) {
+            w = re_size_x + pt.x - re_pos_x;
+        }
+        if (resize_clicked == TOP) {
+            window_pos_y = pt.y;
+            h = re_size_y - pt.y + re_pos_y;
+            if (h < content_h) { h = content_h; window_pos_y = re_pos_y; }
+        }
+        if (resize_clicked == BOTTOM) {
+            h = re_size_y + pt.y - re_pos_y;
+        }
+        if (resize_clicked == LEFTTOP) {
+            window_pos_x = pt.x;
+            w = re_size_x - pt.x + re_pos_x;
+            window_pos_y = pt.y;
+            h = re_size_y - pt.y + re_pos_y;
+            if (w < content_w) { w = content_w; window_pos_x = re_pos_x; }
+            if (h < content_h) { h = content_h; window_pos_y = re_pos_y; }
+        }
+        if (resize_clicked == LEFTBOTTOM) {
+            window_pos_x = pt.x;
+            w = re_size_x - pt.x + re_pos_x;
+            h = re_size_y + pt.y - re_pos_y;
+            if (w < content_w) { w = content_w; window_pos_x = re_pos_x; }
+        }
+        if (resize_clicked == RIGHTTOP) {
+            w = re_size_x + pt.x - re_pos_x;
+            window_pos_y = pt.y;
+            h = re_size_y - pt.y + re_pos_y;
+            if (h < content_h) { h = content_h; window_pos_y = re_pos_y; }
+        }
+        if (resize_clicked == RIGHTBOTTOM) {
+            w = re_size_x + pt.x - re_pos_x;
+            h = re_size_y + pt.y - re_pos_y;
+        }
+    }
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) { resize_clicked = 0; }
+
+    if (!isMaximized) {
+        glfwSetWindowPos(window, window_pos_x, window_pos_y);
+        w = w >= content_w ? w : content_w;
+        h = h >= content_h ? h : content_h;
+        glfwSetWindowSize(window, w, h);
+    }
+    else {
+        glfwSetWindowPos(window, 0, 0);
+        int xScreenResolution = GetSystemMetrics(SM_CXSCREEN);
+        int yScreenResolution = GetSystemMetrics(SM_CYSCREEN);
+        glfwSetWindowSize(window, xScreenResolution, yScreenResolution);
+    }
     return 0;
 }
 
@@ -167,8 +244,14 @@ int CleanGui::terminate_glfw()
     return 0;
 }
 
-ImVec2 CleanGui::getWindowSize() { return { (float)w, (float)h }; }
+ImVec2 CleanGui::getWindowSize() {
+    if (!isMaximized) {
+        return { (float)w, (float)h };
+    }
+    else
+        return { (float)GetSystemMetrics(SM_CXSCREEN) , (float)GetSystemMetrics(SM_CYSCREEN) };
+}
 void CleanGui::minimizeWindow() { glfwIconifyWindow(window); }
-void CleanGui::maximizeWindow() { glfwMaximizeWindow(window); }
-void CleanGui::restoreWindow() { glfwRestoreWindow(window); }
+void CleanGui::maximizeWindow() { isMaximized = true; }
+void CleanGui::restoreWindow() { isMaximized = false; }
 void CleanGui::closeWindow() { isclose = true; }
