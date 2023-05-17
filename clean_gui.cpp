@@ -106,6 +106,14 @@ int CleanGui::start_clean_window()
 
     ImGui::Begin(title, &select, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize);
+    if (isMaximized)
+    {
+        glfwSetWindowPos(window, 0, 0);
+        int xScreenResolution = GetSystemMetrics(SM_CXSCREEN);
+        int yScreenResolution = GetSystemMetrics(SM_CYSCREEN);
+        glfwSetWindowSize(window, xScreenResolution, yScreenResolution);
+        return 0;
+    }
     if (ImGui::IsWindowHovered() && resize_clicked == 0)
     {
         POINT mouse_pos;
@@ -207,18 +215,11 @@ int CleanGui::start_clean_window()
         }
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) { resize_clicked = 0; }
-    if (!isMaximized) {
-        glfwSetWindowPos(window, window_pos_x, window_pos_y);
-        w = w >= content_w ? w : content_w;
-        h = h >= content_h ? h : content_h;
-        glfwSetWindowSize(window, w, h);
-    }
-    else {
-        glfwSetWindowPos(window, 0, 0);
-        int xScreenResolution = GetSystemMetrics(SM_CXSCREEN);
-        int yScreenResolution = GetSystemMetrics(SM_CYSCREEN);
-        glfwSetWindowSize(window, xScreenResolution, yScreenResolution);
-    }
+    
+    glfwSetWindowPos(window, window_pos_x, window_pos_y);
+    w = w >= content_w ? w : content_w;
+    h = h >= content_h ? h : content_h;
+    glfwSetWindowSize(window, w, h);
     return 0;
 }
 
