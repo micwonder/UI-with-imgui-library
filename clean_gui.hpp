@@ -43,6 +43,7 @@ private:
     POINT mouse_start_pos;
     ImVec2 window_start_pos = { 0, 0 };
     bool mouse_clicked = false;
+    bool mouse_dragging = false;
     int resize_clicked = 0;
     double re_pos_x, re_pos_y, re_size_x, re_size_y;
 protected:
