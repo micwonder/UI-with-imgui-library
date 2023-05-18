@@ -56,7 +56,6 @@ int CleanGui::init_glfw()
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
     glfwWindowHint(GLFW_DECORATED, false);
     window = glfwCreateWindow(w, h, title, nullptr, nullptr);
-    hwnd = glfwGetWin32Window(window);
     glfwMakeContextCurrent(window);
     glfwShowWindow(window);
 
@@ -69,6 +68,13 @@ int CleanGui::init_glfw()
     }
     glfwSetWindowIcon(window, 1, images);
     stbi_image_free(images[0].pixels);
+    icon_files[0].pixels = stbi_load("C:/dev/Resources/Icons/BossIcons/arrow_lt.png", &icon_files[0].width, &icon_files[0].height, nullptr, 4);
+    icon_files[1].pixels = stbi_load("C:/dev/Resources/Icons/BossIcons/arrow_rt.png", &icon_files[1].width, &icon_files[1].height, nullptr, 4);
+    icon_files[2].pixels = stbi_load("C:/dev/Resources/Icons/BossIcons/arrow_move.png", &icon_files[2].width, &icon_files[2].height, nullptr, 4);
+
+    icons[0] = glfwCreateCursor(&icon_files[0], icon_files[0].width / 2, icon_files[0].height / 2);
+    icons[1] = glfwCreateCursor(&icon_files[1], icon_files[1].width / 2, icon_files[1].height / 2);
+    icons[2] = glfwCreateCursor(&icon_files[2], icon_files[2].width / 2, icon_files[2].height / 2);
     return 0;
 }
 
@@ -84,13 +90,40 @@ int CleanGui::init_im_gui()
     return 0;
 }
 
+void CleanGui::setResizeCursor()
+{
+    if (isMaximized) {
+        ImGui::GetIO().ConfigFlags = !ImGuiConfigFlags_NoMouseCursorChange;
+        return;
+    }
+    double curx, cury;
+    glfwGetCursorPos(window, &curx, &cury);
+    int window_w, window_h;
+    glfwGetWindowSize(window, &window_w, &window_h);
+    int resize_state = 0;
+    if (curx <= 5) { resize_state = LEFT; }
+    if (curx >= window_w - 5 && cury >= 30) { resize_state = RIGHT; }
+    if (cury <= 5 && curx <= window_w - 90) { resize_state = TOP; }
+    if (cury >= window_h - 5) { resize_state = BOTTOM; }
+    if (curx <= 5 && cury <= 5) { resize_state = LEFTTOP; }
+    if (curx <= 5 && cury >= window_h - 5) { resize_state = LEFTBOTTOM; }
+    if (curx >= window_w - 5 && cury <= 5) { resize_state = RIGHTTOP; }
+    if (curx >= window_w - 5 && cury >= window_h - 5) { resize_state = RIGHTBOTTOM; }
+    
+    resize_over = true;
+    ImGui::GetIO().ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+    if(resize_state == LEFT || resize_state == RIGHT){ glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR)); }
+    else if (resize_state == TOP || resize_state == BOTTOM) { glfwSetCursor(window, glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR)); }
+    else if (resize_state == LEFTTOP || resize_state == RIGHTBOTTOM) { glfwSetCursor(window, icons[0]); }
+    else if (resize_state == LEFTBOTTOM || resize_state == LEFTBOTTOM) { glfwSetCursor(window, icons[1]); }
+    else { resize_over = false; }
+}
 int CleanGui::start_clean_window()
 {
     glfwGetWindowPos(window, &glfw_pos_x_, &glfw_pos_y_);
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
     //resize
     int window_w, window_h;
     glfwGetWindowSize(window, &window_w, &window_h);
@@ -99,10 +132,9 @@ int CleanGui::start_clean_window()
     //MainSpace
     ImGui::SetNextWindowPos({ 0, 0 });
     ImGui::SetNextWindowSizeConstraints(ImVec2(content_w, content_h), ImVec2(FLT_MAX, FLT_MAX));
-
+    setResizeCursor();
     bool select = true;
     double curx, cury;
-    glfwGetCursorPos(window, &curx, &cury);
 
     ImGui::Begin(title, &select, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize);
@@ -114,11 +146,12 @@ int CleanGui::start_clean_window()
         glfwSetWindowSize(window, xScreenResolution, yScreenResolution);
         return 0;
     }
+    glfwGetCursorPos(window, &curx, &cury);
     if (resize_clicked == 0)
     {
         POINT mouse_pos;
         GetCursorPos(&mouse_pos);
-        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && mouse_pos.y - window_pos_y <= 30 && mouse_pos.x - window_pos_x <= window_w - 90)
         {
             if (!mouse_clicked)
             {
@@ -130,9 +163,10 @@ int CleanGui::start_clean_window()
         }
         else if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
         {
+            mouse_dragging = true;
             if (mouse_clicked)
             {
-                mouse_dragging = true;
+                glfwSetCursor(window, icons[2]);
                 window_pos_x = init_x - mouse_start_pos.x + mouse_pos.x;
                 window_pos_y = init_y - mouse_start_pos.y + mouse_pos.y;
                 glfwSetWindowPos(window, window_pos_x, window_pos_y);
@@ -140,29 +174,33 @@ int CleanGui::start_clean_window()
         }
         else if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
         {
+            mouse_dragging = false;
             if (mouse_clicked)
             {
-                mouse_dragging = false;
                 mouse_clicked = false;
             }
         }
     }
     else
         mouse_clicked = false;
-    printf("%d %d\n", mouse_clicked, mouse_dragging);
+
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouse_dragging)
     {
         POINT pt;
         GetCursorPos(&pt);
+        ImGui::GetIO().ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
         if (resize_clicked == 0)
         {
             re_pos_x = pt.x;
             re_pos_y = pt.y;
             re_size_x = window_w;
             re_size_y = window_h;
-            if (curx <= 5) { resize_clicked = LEFT; }
-            if (curx >= window_w - 5) { resize_clicked = RIGHT; }
-            if (cury <= 5) { resize_clicked = TOP; }
+            re_cur_x = curx;
+            re_cur_y = cury;
+
+            if (curx <= 5) { resize_clicked = LEFT;  }
+            if (curx >= window_w - 5 && cury >= 30) { resize_clicked = RIGHT; }
+            if (cury <= 5 && curx <= window_w - 90) { resize_clicked = TOP; }
             if (cury >= window_h - 5) { resize_clicked = BOTTOM; }
             if (curx <= 5 && cury <= 5) { resize_clicked = LEFTTOP; }
             if (curx <= 5 && cury >= window_h - 5) { resize_clicked = LEFTBOTTOM; }
@@ -170,48 +208,59 @@ int CleanGui::start_clean_window()
             if (curx >= window_w - 5 && cury >= window_h - 5) { resize_clicked = RIGHTBOTTOM; }
         }
         if (resize_clicked == LEFT) {
-            window_pos_x = pt.x;
+            window_pos_x = pt.x - re_cur_x;
             w = re_size_x - pt.x + re_pos_x;
-            if (w <= content_w) { w = content_w; window_pos_x = re_pos_x + re_size_x - content_w; }
+            if (w <= content_w) { w = content_w; window_pos_x = re_pos_x - re_cur_x + re_size_x - content_w; }
+            glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
         }
         if (resize_clicked == RIGHT) {
             w = re_size_x + pt.x - re_pos_x;
+            glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
         }
         if (resize_clicked == TOP) {
-            window_pos_y = pt.y;
+            window_pos_y = pt.y - re_cur_y;
             h = re_size_y - pt.y + re_pos_y;
-            if (h < content_h) { h = content_h; window_pos_y = re_pos_y + re_size_y - content_h; }
+            if (h < content_h) { h = content_h; window_pos_y = re_pos_y - re_cur_y + re_size_y - content_h; }
+            glfwSetCursor(window, glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
         }
         if (resize_clicked == BOTTOM) {
             h = re_size_y + pt.y - re_pos_y;
+            glfwSetCursor(window, glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));
         }
         if (resize_clicked == LEFTTOP) {
-            window_pos_x = pt.x;
+            window_pos_x = pt.x - re_cur_x;
             w = re_size_x - pt.x + re_pos_x;
-            window_pos_y = pt.y;
+            window_pos_y = pt.y - re_cur_y;
             h = re_size_y - pt.y + re_pos_y;
-            if (w < content_w) { w = content_w; window_pos_x = re_pos_x + re_size_x - content_w; }
-            if (h < content_h) { h = content_h; window_pos_y = re_pos_y + re_size_y - content_h; }
+            if (w <= content_w) { w = content_w; window_pos_x = re_pos_x - re_cur_x + re_size_x - content_w; }
+            if (h < content_h) { h = content_h; window_pos_y = re_pos_y - re_cur_y + re_size_y - content_h; }
+            glfwSetCursor(window, icons[0]);
         }
         if (resize_clicked == LEFTBOTTOM) {
-            window_pos_x = pt.x;
+            window_pos_x = pt.x - re_cur_x;
             w = re_size_x - pt.x + re_pos_x;
             h = re_size_y + pt.y - re_pos_y;
-            if (w < content_w) { w = content_w; window_pos_x = re_pos_x + re_size_x - content_w; }
+            if (w <= content_w) { w = content_w; window_pos_x = re_pos_x - re_cur_x + re_size_x - content_w; }
+            glfwSetCursor(window, icons[1]);
         }
         if (resize_clicked == RIGHTTOP) {
             w = re_size_x + pt.x - re_pos_x;
-            window_pos_y = pt.y;
+            window_pos_y = pt.y - re_cur_y;
             h = re_size_y - pt.y + re_pos_y;
-            if (h < content_h) { h = content_h; window_pos_y = re_pos_y + re_size_y - content_h; }
+            if (h < content_h) { h = content_h; window_pos_y = re_pos_y - re_cur_y + re_size_y - content_h; }
+            glfwSetCursor(window, icons[1]);
         }
         if (resize_clicked == RIGHTBOTTOM) {
             w = re_size_x + pt.x - re_pos_x;
             h = re_size_y + pt.y - re_pos_y;
+            glfwSetCursor(window, icons[0]);
         }
     }
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) { resize_clicked = 0; }
-    
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+        resize_clicked = 0;
+        if(resize_over == false && mouse_clicked == false)
+            ImGui::GetIO().ConfigFlags = !ImGuiConfigFlags_NoMouseCursorChange;
+    }
     glfwSetWindowPos(window, window_pos_x, window_pos_y);
     w = w >= content_w ? w : content_w;
     h = h >= content_h ? h : content_h;
@@ -235,7 +284,6 @@ int CleanGui::terminate_im_gui()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
     return 0;
 }
 

@@ -10,6 +10,7 @@ protected:
 	ImFont* font;
 	ImU32 darkcolor, lightcolor, bgcolor;
 	int current;
+	float cur_off = 0;
 public:
 	Graph() {}
 	Graph(ImVec2 _pos, ImVec2 _size, ImFont* _font, ImU32 _darkcolor, ImU32 _lightcolor, ImU32 _bgcolor) : pos(_pos), size(_size), font(_font), darkcolor(_darkcolor), lightcolor(_lightcolor), bgcolor(_bgcolor) { current = 0; }

@@ -29,7 +29,6 @@
 class CleanGui
 {
 private:
-    HWND hwnd;
     char* title = "Boss";
     char* icon_image_path = "C:/dev/Resources/Icons/BossIcons/BossIcon-1.png";
     int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 1100, h = 700, content_w = 1100, content_h = 700;
@@ -45,13 +44,15 @@ private:
     bool mouse_clicked = false;
     bool mouse_dragging = false;
     int resize_clicked = 0;
-    double re_pos_x, re_pos_y, re_size_x, re_size_y;
+    double re_pos_x, re_pos_y, re_size_x, re_size_y, re_cur_x, re_cur_y;
+    GLFWimage icon_files[5];
+    GLFWcursor* icons[5];
 protected:
     GLFWwindow* window;
 public:
     bool isMaximized = false;
     bool isclose = false;
-    bool render_state = true;
+    bool resize_over = false;
     int init_glfw();
     int init_im_gui();
 
@@ -68,4 +69,5 @@ public:
     void maximizeWindow();
     void restoreWindow();
     void closeWindow();
+    void setResizeCursor();
 };

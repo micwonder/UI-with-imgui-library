@@ -77,6 +77,7 @@ void other_performance_test(Gui &gui)
 
 int main()
 {
+    for (int i = 0; i < 9000000; i++);
     auto gui = Gui();
     gui.events["registerbuttonclicked"]->AddListener(RegisterButtonClicked);
     gui.events["forgotbuttonclicked"]->AddListener(ForgotButtonClicked);

@@ -72,25 +72,36 @@ void VarGraph::updateValues(std::vector<std::vector<std::string>> _valuenames, s
 }
 
 void VarGraph::render(){
-    ImGui::PushFont(font);
     float butpos = 0;
+    ImGui::PushFont(font);
     float offset = ImGui::GetScrollX();
-    for (int i = states.size() - 1; i >= 0; i--) {
+    int i;
+    float t_off = offset;
+    if (offset == cur_off)
+    {
+        offset = 0;
+    }
+    for (i = states.size() - 1; i >= 0; i--) {
         std::string id = "##button";
         id += i;
         butpos += (ImGui::CalcTextSize(states[i].data()).x + 10);
-        ImGui::SetWindowPos(pos + ImVec2(size.x - butpos + offset, 0));
+        if (t_off == cur_off)
+        {
+            ImGui::SetWindowPos(pos + ImVec2(size.x - butpos + t_off, 0));
+        }
+        else
+            ImGui::SetWindowPos(pos + ImVec2(size.x - butpos + t_off, 0));
         if (ImGui::TextButton(id.data(), states[i].data()))
         {
             if (current != i)
             {
                 current = i;
-                offset = 0;
+                cur_off = offset;
             }
         }
     }
-    ImVec2 curpos = this->pos + ImVec2(0, ImGui::CalcTextSize(states[0].data()).y) - ImVec2(offset, 0);
-    ImVec2 cursize = this->size - ImVec2(0, ImGui::CalcTextSize(states[0].data()).x);
+    ImVec2 curpos = this->pos + ImVec2(0, ImGui::CalcTextSize(states[current].data()).y) - ImVec2(offset, 0);
+    ImVec2 cursize = this->size - ImVec2(0, ImGui::CalcTextSize(states[current].data()).x);
     std::vector<std::string> x_label = valuenames[current];
     std::vector<float> y_label = values[current];
     float maxVal = y_label[0];
