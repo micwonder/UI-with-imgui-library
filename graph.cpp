@@ -77,7 +77,7 @@ void VarGraph::render(){
     float offset = ImGui::GetScrollX();
     int i;
     float t_off = offset;
-    if (offset == cur_off)
+    if (t_off == cur_off)
     {
         offset = 0;
     }
@@ -96,10 +96,10 @@ void VarGraph::render(){
             if (current != i)
             {
                 current = i;
-                cur_off = offset;
             }
         }
     }
+    ImGui::SetScrollHereX(1.0f);
     ImVec2 curpos = this->pos + ImVec2(0, ImGui::CalcTextSize(states[current].data()).y) - ImVec2(offset, 0);
     ImVec2 cursize = this->size - ImVec2(0, ImGui::CalcTextSize(states[current].data()).x);
     std::vector<std::string> x_label = valuenames[current];
