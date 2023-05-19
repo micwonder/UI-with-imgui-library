@@ -20,6 +20,7 @@ class Selector
 	GLuint image;
 	int type;
 	int align;
+	bool oversize = false;
 public:
 	Event* select_event;
 	Selector();

@@ -280,7 +280,7 @@ int main(int, char**)
                     break;
                 }
 
-                ImGui::BeginChild("0", ImVec2(880, 507), ImVec2(115, 120));
+                ImGui::BeginChild("0", ImVec2(680, 507), ImVec2(115, 120));
 
                 switch (tab_menu) {
 

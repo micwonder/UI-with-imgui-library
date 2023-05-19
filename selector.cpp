@@ -49,7 +49,13 @@ void Selector::doModal(ImVec2 _pos, ImVec2 _size)
         buttonsize = ImGui::CalcTextSize(current_item.data());
     else
         buttonsize = ImVec2(30, 30);
-    popupsize.x = getWidth();
+    if (getWidth() >= popupsize.x)
+    {
+        popupsize.x = getWidth();
+        oversize = false;
+    }
+    else
+        oversize = true;
     if (align == ALIGN_LEFT)
         popuppos = buttonpos + ImVec2(0, buttonsize.y);
     else
@@ -57,7 +63,15 @@ void Selector::doModal(ImVec2 _pos, ImVec2 _size)
     popuppos.y += 5;
     if (type == TEXT_BUTTON) {
         ImGui::SetWindowPos(buttonpos);
-        if (ImGui::TextButton(button_id.data(), current_item.data())) { button_clicked = true; }
+        std::string temp;
+        if (oversize == true) {
+            while (1) {
+                if (ImGui::CalcTextSize((current_item + temp).data()).x > popupsize.x)
+                    break;
+                temp += " ";
+            }
+        }
+        if (ImGui::TextButton(button_id.data(), (current_item + temp).data())) { button_clicked = true; }
     }
     else {
         ImGui::SetCursorScreenPos(buttonpos);
@@ -73,8 +87,10 @@ bool Selector::render()
 {
     bool selected = true;
     int past_index = current_index;
-    
-    ImGui::SetNextWindowSize(popupsize);
+    if (popupsize.y > getContentHeight())
+        ImGui::SetWindowSize({ popupsize.x, getContentHeight() });
+    else
+        ImGui::SetNextWindowSize(popupsize);
     ImGui::SetNextWindowPos(popuppos);
     ImGui::SetNextWindowContentSize({ popupsize.x, getContentHeight() });
     ImGui::OpenPopup(popup_id.data());

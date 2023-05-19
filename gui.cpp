@@ -333,23 +333,23 @@ void Gui::renderFrame()
     if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) { clearSelectors(); }
     switch (current_page)
     {
-        case PAGE_LOGIN:
-            loginPage();
-            break;
-        case PAGE_OVERVIEW:
-            overviewPage();
-            break;
-        case PAGE_ACCOUNT:
-            accountPage();
-            break;
-        case PAGE_SETTING:
-            settingPage();
-            break;
-        case PAGE_DICTATION:
-            dictationPage();
-            break;
-        default:
-            break;
+    case PAGE_LOGIN:
+        loginPage();
+        break;
+    case PAGE_OVERVIEW:
+        overviewPage();
+        break;
+    case PAGE_ACCOUNT:
+        accountPage();
+        break;
+    case PAGE_SETTING:
+        settingPage();
+        break;
+    case PAGE_DICTATION:
+        dictationPage();
+        break;
+    default:
+        break;
     }
     end_clean_window();
 }
@@ -521,7 +521,7 @@ void Gui::overviewPage()
     ImGui::GetWindowDrawList()->AddRectFilled(curpos + ImVec2(5, 15), curpos + cursize - ImVec2(5, 5), IM_COL32(0x0d, 0x12, 0x1d, 0xff));
     ImGui::SetCursorScreenPos(curpos + ImVec2(5, 0));
     ImGui::Text("INPUT DEVICE");
-    device_selector.doModal(curpos + ImVec2(0, 15), ImVec2(70, 100));
+    device_selector.doModal(curpos + ImVec2(0, 15), ImVec2(180, 100));
     ImGui::PopFont();
 
     // Notification Icon
