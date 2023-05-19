@@ -16,7 +16,7 @@ class InputTexts : CleanGui
 public:
 	Event* text_edit_event;
 	InputTexts();
-	InputTexts(char* _str_id, ImVec2 _pos, ImVec2 _size, ImU32 _color_dark, ImU32 _color_light, ImU32 _color_edge, int _type, GLuint _img_email, GLuint _img_pass, GLuint _img_eye_on, GLuint _img_eye_off, float _curve = 12.0f);
+	InputTexts(char* _str_id, ImVec2 _pos, ImVec2 _size, ImU32 _color_dark, ImU32 _color_light, ImU32 _color_edge, int _type, GLuint _img_email, GLuint _img_pass, GLuint _img_eye_on, GLuint _img_eye_off, float _curve = 10.0f);
 	~InputTexts();
 	void render(ImVec2 _pos, ImVec2 _size, ImColor bgcolor);
 	bool isEmpty() { return text[0] == '\0'; }

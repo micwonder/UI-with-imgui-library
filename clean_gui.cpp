@@ -70,11 +70,9 @@ int CleanGui::init_glfw()
     stbi_image_free(images[0].pixels);
     icon_files[0].pixels = stbi_load("C:/dev/Resources/Icons/BossIcons/arrow_lt.png", &icon_files[0].width, &icon_files[0].height, nullptr, 4);
     icon_files[1].pixels = stbi_load("C:/dev/Resources/Icons/BossIcons/arrow_rt.png", &icon_files[1].width, &icon_files[1].height, nullptr, 4);
-    icon_files[2].pixels = stbi_load("C:/dev/Resources/Icons/BossIcons/arrow_move.png", &icon_files[2].width, &icon_files[2].height, nullptr, 4);
-
+    
     icons[0] = glfwCreateCursor(&icon_files[0], icon_files[0].width / 2, icon_files[0].height / 2);
     icons[1] = glfwCreateCursor(&icon_files[1], icon_files[1].width / 2, icon_files[1].height / 2);
-    icons[2] = glfwCreateCursor(&icon_files[2], icon_files[2].width / 2, icon_files[2].height / 2);
     return 0;
 }
 
@@ -113,7 +111,7 @@ void CleanGui::setResizeCursor()
     resize_over = true;
     ImGui::GetIO().ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
     if(resize_state == LEFT || resize_state == RIGHT){ glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR)); }
-    else if (resize_state == TOP || resize_state == BOTTOM) { glfwSetCursor(window, glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR)); }
+    else if (resize_state == TOP || resize_state == BOTTOM) { glfwSetCursor(window, glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));}
     else if (resize_state == LEFTTOP || resize_state == RIGHTBOTTOM) { glfwSetCursor(window, icons[0]); }
     else if (resize_state == LEFTBOTTOM || resize_state == LEFTBOTTOM) { glfwSetCursor(window, icons[1]); }
     else { resize_over = false; }
@@ -132,10 +130,10 @@ int CleanGui::start_clean_window()
     //MainSpace
     ImGui::SetNextWindowPos({ 0, 0 });
     ImGui::SetNextWindowSizeConstraints(ImVec2(content_w, content_h), ImVec2(FLT_MAX, FLT_MAX));
-    setResizeCursor();
+    if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS)
+        setResizeCursor();
     bool select = true;
     double curx, cury;
-
     ImGui::Begin(title, &select, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize);
     if (isMaximized)
@@ -166,7 +164,7 @@ int CleanGui::start_clean_window()
             mouse_dragging = true;
             if (mouse_clicked)
             {
-                glfwSetCursor(window, icons[2]);
+                glfwSetCursor(window, glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
                 window_pos_x = init_x - mouse_start_pos.x + mouse_pos.x;
                 window_pos_y = init_y - mouse_start_pos.y + mouse_pos.y;
                 glfwSetWindowPos(window, window_pos_x, window_pos_y);
@@ -216,6 +214,7 @@ int CleanGui::start_clean_window()
         if (resize_clicked == RIGHT) {
             w = re_size_x + pt.x - re_pos_x;
             glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
+            printf("asdfasdf");
         }
         if (resize_clicked == TOP) {
             window_pos_y = pt.y - re_cur_y;

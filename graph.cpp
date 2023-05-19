@@ -110,14 +110,7 @@ void VarGraph::render(){
             maxVal = y_label[i];
     char max_text[10];
     sprintf(max_text, "%.0f", maxVal);
-    for (int i = 0; i < 5; ++i)
-    {
-        char txt[10];
-        sprintf(txt, "%d", (int)(maxVal - maxVal / 4 * i));
-        ImGui::SetCursorScreenPos(ImVec2(curpos.x + ImGui::CalcTextSize(max_text).x - ImGui::CalcTextSize(txt).x, curpos.y + 1.0 * cursize.y / 6 * i));
-        ImGui::Text(txt);
-    }
-    ImVec2 y_label_pos = ImVec2(curpos.x + 30, curpos.y + cursize.y / 6 * 5);
+    ImVec2 y_label_pos = ImVec2(curpos.x + ImGui::CalcTextSize(max_text).x, curpos.y + cursize.y / 6 * 5);
     ImGui::SetCursorScreenPos(y_label_pos);
     float gy = curpos.y + cursize.y / 6 * 4 + ImGui::CalcTextSize(max_text).y / 2;
     float width = 20;
@@ -136,6 +129,14 @@ void VarGraph::render(){
         float gx = y_label_pos.x + ImGui::CalcTextSize(x_label[i].data()).x / 2;
         ImGui::GetWindowDrawList()->AddRectFilledMultiColorRounded(ImVec2(int(gx - width / 2), int(gy - height * y_label[i] / maxVal)), ImVec2(int(gx + width / 2), int(gy)), bgcolor, darkcolor, darkcolor, lightcolor, lightcolor, 5.0f, ImDrawFlags_RoundCornersAll);
     }
+    ImGui::GetWindowDrawList()->AddRectFilled(pos, { pos.x + ImGui::CalcTextSize(max_text).x, pos.y + size.y }, bgcolor);
+    for (int i = 0; i < 5; ++i)
+    {
+        char txt[10];
+        sprintf(txt, "%d", (int)(maxVal - maxVal / 4 * i));
+        ImGui::SetCursorScreenPos(ImVec2(curpos.x + ImGui::CalcTextSize(max_text).x - ImGui::CalcTextSize(txt).x + offset, curpos.y + 1.0 * cursize.y / 6 * i));
+        ImGui::Text(txt);
+    }
     ImGui::PopFont();
 }
 
@@ -153,6 +154,7 @@ float VarGraph::getContentX() {
     for (int i = 0; i < x_label.size(); i++) {
         width += ImGui::CalcTextSize(x_label[i].data()).x;
     }
+    width += ImGui::CalcTextSize(x_label[x_label.size() - 1].data()).x;
     ImGui::PopFont();
-    return width + 50;
+    return width;
 }

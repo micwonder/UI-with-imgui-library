@@ -38,9 +38,8 @@ void InputTexts::render(ImVec2 _pos, ImVec2 _size, ImColor bg_color) {
     ImGui::InputTextWithHint(str_id, placeholder, text, 30);
     if (strcmp(before, text) != 0)
         text_edit_event->OnEvent({ text });
-    //ImGui::GetWindowDrawList()->AddRectFilledMultiColor(start_pos, { start_pos.x + width + 20, start_pos.y + padding_y }, color_dark, color_light, color_light, color_dark);
     ImGui::GetWindowDrawList()->AddRectFilledMultiColorRounded({ start_pos.x - curve, start_pos.y - curve }, { start_pos.x + width + 20 + curve, start_pos.y + padding_y + curve }, bg_color, color_dark, color_light, color_light, color_dark, curve);
-    //ImGui::GetWindowDrawList()->AddRect({ start_pos.x - curve, start_pos.y - curve }, { start_pos.x + width + 20 + curve, start_pos.y + padding_y + curve }, color_edge, curve, 0, curve * 1.8);
+    ImGui::GetWindowDrawList()->AddRect({ start_pos.x - curve - 1, start_pos.y - curve - 1 }, { start_pos.x + width + 20 + curve + 2, start_pos.y + padding_y + curve + 2 }, color_edge, curve, 0, 2.0f);
     ImGui::SetCursorPos({start_pos.x + padding_y + 8, start_pos.y + 8 });
     if (text[0] == NULL) {
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0xff, 0xff, 0xff, 0x7f));

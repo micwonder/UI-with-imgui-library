@@ -134,8 +134,8 @@ void Gui::createButtons()
 }
 void Gui::createInputTexts()
 {
-    email_input = InputTexts("##email", {0, 0}, {0, 0}, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_EMAIL, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
-    password_input = InputTexts("##password", {0, 0}, {0, 0}, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_LIGHT, INPUT_TYPE_PASSWORD, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
+    email_input = InputTexts("##email", {0, 0}, {0, 0}, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_EDGE, INPUT_TYPE_EMAIL, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
+    password_input = InputTexts("##password", {0, 0}, {0, 0}, COLOR_INPUT_DARK, COLOR_INPUT_LIGHT, COLOR_INPUT_EDGE, INPUT_TYPE_PASSWORD, my_image_texture[10], my_image_texture[11], my_image_texture[12], my_image_texture[13]);
 
     events["emailchanged"] = email_input.text_edit_event;
     events["passwordchanged"] = password_input.text_edit_event;
@@ -437,15 +437,15 @@ void Gui::overviewPage()
     ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_TILE);
 
     // WPM tile
-    Tiles tiles({ 100, 60 }, windowsize - ImVec2(100, 60), { 4, 7 }, 20.0f, 5.0f, 5.0f);
+    Tiles tiles({ 100, 60 }, windowsize - ImVec2(100, 60), { 4, 7 }, 20.0f, 5.0f, 8.0f);
     tilepos = { 0, 1 }; tilesize = { 1, 1 };
-    tiles.addTile("WPM", tilepos, tilesize, COLOR_BLACK);
+    tiles.addTile("WPM", tilepos, tilesize, COLOR_BORDER);
     {
         Tiles subtiles(tiles.curThick(), tiles.curSize(), {1, 2}, 0.0f, 0.0f);
-        subtiles.addTile("WPM_CHILD1", { 0, 0 }, { 1, 1 }, COLOR_BLACK);
+        subtiles.addTile("WPM_CHILD1", { 0, 0 }, { 1, 1 }, COLOR_BORDER);
         createText({0, 0}, subtiles.curSize(), "WPM", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
-        subtiles.addTile("WPM_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BLACK);
+        subtiles.addTile("WPM_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BORDER);
         char wpmtxt[10];
         sprintf(wpmtxt, "%d", wpm);
         createText({0, 0}, subtiles.curSize(), wpmtxt, ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
@@ -456,7 +456,7 @@ void Gui::overviewPage()
     // Dictation Histroy child
     
     tilepos = { 0, 2 }; tilesize = { 3, 3 };
-    tiles.addTile("Dictation History", tilepos, tilesize, COLOR_BLACK);
+    tiles.addTile("Dictation History", tilepos, tilesize, COLOR_BORDER);
     tiles.setSpacing();
     createText({ 0, 0 }, { 0, 0 }, "Dictation History", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
     createWrapText(history_text.data(), ImGui::GetIO().Fonts->Fonts[2], tiles.curSize().x, COLOR_WHITE);
@@ -464,7 +464,7 @@ void Gui::overviewPage()
 
     // What's new child
     tilepos = { 3, 2 }; tilesize = { 1, 3 };
-    tiles.addTile("What's New", tilepos, tilesize, COLOR_BLACK);
+    tiles.addTile("What's New", tilepos, tilesize, COLOR_BORDER);
     tiles.setSpacing();
     createText({ 0, 0 }, { 0, 0 }, "What's New", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
     createWrapText(news_text.data(), ImGui::GetIO().Fonts->Fonts[2], tiles.curSize().x, COLOR_WHITE);
@@ -472,13 +472,13 @@ void Gui::overviewPage()
 
     // WPM Average child
     tilepos = { 1, 1 }; tilesize = { 1, 1 };
-    tiles.addTile("WPM Average", tilepos, tilesize, COLOR_BLACK);
+    tiles.addTile("WPM Average", tilepos, tilesize, COLOR_BORDER);
     {
         Tiles subtiles(tiles.curThick(), tiles.curSize(), {1, 2}, 0.0f, 0.0f);
-        subtiles.addTile("Average_CHILD1", { 0, 0 }, { 1, 1 }, COLOR_BLACK);
+        subtiles.addTile("Average_CHILD1", { 0, 0 }, { 1, 1 }, COLOR_BORDER);
         createText({ 0, 0 }, subtiles.curSize(), "WPM Average", ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         subtiles.endTile();
-        subtiles.addTile("Average_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BLACK);
+        subtiles.addTile("Average_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BORDER);
         createText({ 0, 0 }, subtiles.curSize(), wpm_values[wpm_selector.currentIndex()].data(), ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
         wpm_selector.doModal({tiles.curPos() + tiles.curSize() - ImVec2(60, 20)}, {70, 100});
         subtiles.endTile();
@@ -488,7 +488,7 @@ void Gui::overviewPage()
     // Language Spoken child
     tilepos = { 0, 5 }; tilesize = {2, 2};
     ImGui::SetNextWindowContentSize({ 0, lang_content.y });
-    tiles.addTile("Language Spoken", tilepos, tilesize, COLOR_BLACK);
+    tiles.addTile("Language Spoken", tilepos, tilesize, COLOR_BORDER);
     tiles.setSpacing();
     createLanguageSpoken(languages, language_values, tiles.curSize());
     tiles.endTile();
@@ -496,7 +496,7 @@ void Gui::overviewPage()
     // Usage Time child
     tilepos = { 2, 5 }; tilesize = { 2, 2 };
     ImGui::SetNextWindowContentSize({usage_time.getContentX(), 0});
-    tiles.addTile("Usage Time", tilepos, tilesize, COLOR_BLACK);
+    tiles.addTile("Usage Time", tilepos, tilesize, COLOR_BORDER);
     tiles.setSpacing();
     usage_time.updatePosSize(tiles.curPos(), tiles.curSize());
     usage_time.updateColor(IM_COL32(0x66, 0xa6, 0xff, 0xff), IM_COL32(0x89, 0xf7, 0xfe, 0xff), IM_COL32(0x21, 0x24, 0x30, 0xff));
