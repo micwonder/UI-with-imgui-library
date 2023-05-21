@@ -1,4 +1,4 @@
-#include "selector.hpp"
+﻿#include "selector.hpp"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
@@ -62,8 +62,7 @@ void Selector::doModal(ImVec2 _pos, ImVec2 _size)
         popuppos = buttonpos + buttonsize - ImVec2(popupsize.x, 0);
     popuppos.y += 5;
     if (type == TEXT_BUTTON) {
-        ImGui::SetWindowPos(buttonpos);
-        std::string temp;
+        std::string temp = " ";
         if (oversize == true) {
             while (1) {
                 if (ImGui::CalcTextSize((current_item + temp).data()).x > popupsize.x)
@@ -71,11 +70,29 @@ void Selector::doModal(ImVec2 _pos, ImVec2 _size)
                 temp += " ";
             }
         }
-        if (ImGui::TextButton(button_id.data(), (current_item + temp).data())) { button_clicked = true; }
+        if (temp.size() >= 6)
+            temp.erase(temp.size() - 6);
+        else
+            temp = " ";
+        ImGui::SetWindowPos(buttonpos);
+        if (ImGui::TextButton(button_id.data(), (current_item + temp).data())) { button_clicked = !button_clicked; cT = std::time(0); }
+        ImVec2 arrowpos = buttonpos + ImGui::CalcTextSize((current_item + temp).data()) + ImVec2(-2, 2);
+        arrowpos = ImVec2((int)arrowpos.x, (int)arrowpos.y);
+        if (button_clicked)
+        {
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x, arrowpos.y - 1 }, { arrowpos.x + 5, arrowpos.y - 10}, IM_COL32(255, 255, 255, 255));
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x + 5, arrowpos.y - 10 }, { arrowpos.x + 10, arrowpos.y }, IM_COL32(255, 255, 255, 255));
+
+        }
+        else
+        {
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x, arrowpos.y - 10 }, { arrowpos.x + 5, arrowpos.y - 1}, IM_COL32(255, 255, 255, 255));
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x + 5, arrowpos.y }, { arrowpos.x + 10, arrowpos.y - 11 }, IM_COL32(255, 255, 255, 255));
+        }
     }
     else {
         ImGui::SetCursorScreenPos(buttonpos);
-        if (ImGui::ImageButton(button_id.data(), (void*)(intptr_t)image, {30, 30})) { button_clicked = true; }
+        if (ImGui::ImageButton(button_id.data(), (void*)(intptr_t)image, { 30, 30 })) { button_clicked = !button_clicked; cT = std::time(0); }
     }
     if (button_clicked) {
         button_clicked = render();
@@ -94,7 +111,7 @@ bool Selector::render()
     ImGui::SetNextWindowPos(popuppos);
     ImGui::SetNextWindowContentSize({ popupsize.x, getContentHeight() });
     ImGui::OpenPopup(popup_id.data());
-    if (ImGui::BeginPopup(popup_id.data(), ImGuiWindowFlags_ChildWindow))
+    if (ImGui::BeginPopup(popup_id.data(), ImGuiWindowFlags_NoFocusOnAppearing))
     {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(ImGui::GetStyle().ItemSpacing.x, 0));
         for (int n = 0; n < items.size(); n++)
@@ -119,7 +136,6 @@ bool Selector::render()
 
 int Selector::currentIndex() { return current_index; }
 std::string Selector::currentItem() { return current_item; }
-void Selector::removeSelect() { button_clicked = false; }
 void Selector::updateValue(std::vector<std::string> _items) {
     items.clear();
     for (int i = 0; i < _items.size(); i++)

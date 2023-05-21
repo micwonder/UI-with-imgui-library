@@ -47,6 +47,7 @@ private:
     double re_pos_x, re_pos_y, re_size_x, re_size_y, re_cur_x, re_cur_y;
     GLFWimage icon_files[5];
     GLFWcursor* icons[5];
+
 protected:
     GLFWwindow* window;
 public:
@@ -70,4 +71,5 @@ public:
     void restoreWindow();
     void closeWindow();
     void setResizeCursor();
+    void setDPI();
 };

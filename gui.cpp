@@ -157,13 +157,27 @@ void Gui::clearSelectors()
     device_selector.removeSelect();
     news_selector.removeSelect();
 }
-
+void Gui::resetSelectors()
+{
+    if (wpm_selector.isClicked()) { 
+        if (wpm_selector.cT > device_selector.cT) { device_selector.removeSelect(); }
+        if (wpm_selector.cT > news_selector.cT) { news_selector.removeSelect(); }
+    }
+    if (device_selector.isClicked()) {
+        if (device_selector.cT > wpm_selector.cT) { wpm_selector.removeSelect(); }
+        if (device_selector.cT > news_selector.cT) { news_selector.removeSelect(); }
+    }
+    if (news_selector.isClicked()) {
+        if (news_selector.cT > device_selector.cT) { device_selector.removeSelect(); }
+        if (news_selector.cT > wpm_selector.cT) { wpm_selector.removeSelect(); }
+    }
+}
 void Gui::createCheckBoxes()
 {
-    remember_checkbox = CheckBox("Remember me", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
-    command_checkbox = CheckBox("Command", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
-    vad_checkbox = CheckBox("VAD", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
-    rules_checkbox = CheckBox("Rules", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false);
+    remember_checkbox = CheckBox("Remember me", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false, COLOR_GUI_LOGIN_RIGHT);
+    command_checkbox = CheckBox("Command", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false, COLOR_GUI_RIGHT, true, 800);
+    vad_checkbox = CheckBox("VAD", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false, COLOR_GUI_RIGHT, true, 700);
+    rules_checkbox = CheckBox("Rules", { 0, 0 }, { 0, 0 }, ImGui::GetIO().Fonts->Fonts[2], false, COLOR_GUI_RIGHT, true, 600);
 
     events["rememberchecked"] = remember_checkbox.check_event;
     events["commandchecked"] = command_checkbox.check_event;
@@ -433,7 +447,7 @@ void Gui::overviewPage()
     createTitleBar(COLOR_GUI_RIGHT);
     createTabIcon();
     createText({ 100, 35 }, { 0, 0 }, "Overview", ImGui::GetIO().Fonts->Fonts[0], COLOR_WHITE);
-
+    resetSelectors();
     ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_TILE);
 
     // WPM tile
@@ -480,11 +494,10 @@ void Gui::overviewPage()
         subtiles.endTile();
         subtiles.addTile("Average_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BORDER);
         createText({ 0, 0 }, subtiles.curSize(), wpm_values[wpm_selector.currentIndex()].data(), ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
-        wpm_selector.doModal({tiles.curPos() + tiles.curSize() - ImVec2(60, 20)}, {70, 100});
+        wpm_selector.doModal({ tiles.curPos() + tiles.curSize() - ImVec2(70, 20) }, {70, 100});
         subtiles.endTile();
     }
     tiles.endTile();
-
     // Language Spoken child
     tilepos = { 0, 5 }; tilesize = {2, 2};
     ImGui::SetNextWindowContentSize({ 0, lang_content.y });
@@ -517,23 +530,31 @@ void Gui::overviewPage()
     curpos = ImVec2(windowsize.x - 300, 35);
     cursize = ImVec2(180, 40);
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[10]);
-    ImGui::GetWindowDrawList()->AddRectFilled(curpos, curpos + cursize, IM_COL32(0x21, 0x24, 0x30, 0xff));
-    ImGui::GetWindowDrawList()->AddRectFilled(curpos + ImVec2(5, 15), curpos + cursize - ImVec2(5, 5), IM_COL32(0x0d, 0x12, 0x1d, 0xff));
+    ImGui::GetWindowDrawList()->AddRectFilled(curpos - ImVec2(10, 0), curpos + cursize, IM_COL32(0x21, 0x24, 0x30, 0xff));
+    ImGui::GetWindowDrawList()->AddRectFilled(curpos + ImVec2(-5, 15), curpos + cursize - ImVec2(5, 5), IM_COL32(0x0d, 0x12, 0x1d, 0xff));
     ImGui::SetCursorScreenPos(curpos + ImVec2(5, 0));
     ImGui::Text("INPUT DEVICE");
-    device_selector.doModal(curpos + ImVec2(0, 15), ImVec2(180, 100));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_GUI_RIGHT);
+    ImGui::BeginChild("##DeviceChild", ImVec2(170, 20), curpos + ImVec2(0, 15), 0, ImGuiWindowFlags_NoScrollbar);
+    device_selector.doModal(curpos + ImVec2(0, 15), ImVec2(170, 100));
+    ImGui::EndChild();
+    ImGui::PopStyleColor();
     ImGui::PopFont();
 
     // Notification Icon
     curpos = ImVec2(windowsize.x - 110, 35);
-    cursize = ImVec2(30, 30);
+    cursize = ImVec2(35, 35);
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[10]);
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_GUI_RIGHT);
+    ImGui::BeginChild("##NewsChild", cursize + ImVec2(10, 10), curpos, 0, ImGuiWindowFlags_NoScrollbar);
     news_selector.doModal(curpos, {170, 100});
+    ImGui::EndChild();
+    ImGui::PopStyleColor();
     ImGui::PopFont();
     if (checked_notification) { ImGui::GetWindowDrawList()->AddCircleFilled(curpos + ImVec2(25, 10), 4.0f, COLOR_NOTIFICATION); }
 
     // User Button
-    curpos = ImVec2(windowsize.x - 70, 35);
+    curpos = ImVec2(windowsize.x - 60, 35);
     cursize = ImVec2(35, 35);
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON_USER);
     user_button.render(curpos, cursize);

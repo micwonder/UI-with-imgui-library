@@ -16,7 +16,7 @@ void Tiles::addTile(char* str_id, ImVec2 tilepos, ImVec2 tilesize, ImU32 color){
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, thick);
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, curve);
 	ImGui::PushStyleColor(ImGuiCol_Border, color);
-	ImGui::BeginChild(str_id, cursize, curpos, true, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::BeginChild(str_id, cursize, curpos, true, ImGuiWindowFlags_ChildWindow);
 }
 
 void Tiles::endTile() { ImGui::EndChild(); ImGui::PopStyleColor(); ImGui::PopStyleVar(); ImGui::PopStyleVar(); }

@@ -82,6 +82,7 @@ public:
     void createInputTexts();
     void createSelectors();
     void clearSelectors();
+    void resetSelectors();
     void createCheckBoxes();
     void loadImage();
     void deleteImage();

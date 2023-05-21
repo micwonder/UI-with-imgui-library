@@ -9,8 +9,9 @@
 
 #include "stb_image.h"
 
-#include <ShellScalingApi.h>
-#pragma comment(lib, "User32.lib")
+#include <shellscalingapi.h>
+
+#pragma comment(lib, "Shcore.lib")
 
 #include <GL/gl.h>
 
@@ -73,6 +74,9 @@ int CleanGui::init_glfw()
     
     icons[0] = glfwCreateCursor(&icon_files[0], icon_files[0].width / 2, icon_files[0].height / 2);
     icons[1] = glfwCreateCursor(&icon_files[1], icon_files[1].width / 2, icon_files[1].height / 2);
+
+    HMONITOR monitor = MonitorFromWindow(GetActiveWindow(), MONITOR_DEFAULTTONEAREST);
+    GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
     return 0;
 }
 
@@ -116,11 +120,24 @@ void CleanGui::setResizeCursor()
     else if (resize_state == LEFTBOTTOM || resize_state == LEFTBOTTOM) { glfwSetCursor(window, icons[1]); }
     else { resize_over = false; }
 }
+
+void CleanGui::setDPI()
+{
+    UINT ndpiX, ndpiY;
+    HMONITOR monitor = MonitorFromWindow(GetActiveWindow(), MONITOR_DEFAULTTONEAREST);
+    GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &ndpiX, &ndpiY);
+    w = (int)1.0 * w * ndpiX / dpiX;
+    h = (int)1.0 * h * ndpiY / dpiY;
+    dpiX = ndpiX;
+    dpiY = ndpiY;
+    printf("%d %d\n", w, h);
+}
 int CleanGui::start_clean_window()
 {
     glfwGetWindowPos(window, &glfw_pos_x_, &glfw_pos_y_);
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
+    setDPI();
     ImGui::NewFrame();
     //resize
     int window_w, window_h;
@@ -134,17 +151,11 @@ int CleanGui::start_clean_window()
         setResizeCursor();
     bool select = true;
     double curx, cury;
+    int xScreenResolution = GetSystemMetrics(SM_CXSCREEN);
+    int yScreenResolution = GetSystemMetrics(SM_CYSCREEN);
+
     ImGui::Begin(title, &select, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize);
-    if (isMaximized)
-    {
-        glfwSetWindowPos(window, 0, 0);
-        int xScreenResolution = GetSystemMetrics(SM_CXSCREEN);
-        int yScreenResolution = GetSystemMetrics(SM_CYSCREEN);
-        glfwSetWindowSize(window, xScreenResolution, yScreenResolution);
-        return 0;
-    }
-    glfwGetCursorPos(window, &curx, &cury);
     if (resize_clicked == 0)
     {
         POINT mouse_pos;
@@ -164,10 +175,19 @@ int CleanGui::start_clean_window()
             mouse_dragging = true;
             if (mouse_clicked)
             {
-                glfwSetCursor(window, glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
-                window_pos_x = init_x - mouse_start_pos.x + mouse_pos.x;
-                window_pos_y = init_y - mouse_start_pos.y + mouse_pos.y;
-                glfwSetWindowPos(window, window_pos_x, window_pos_y);
+                if (isMaximized) {
+                    mouse_start_pos = mouse_pos;
+                    printf("%d %d\n", w, xScreenResolution);
+                    init_x = mouse_pos.x - mouse_pos.x * w / xScreenResolution;
+                    init_y = mouse_pos.y;
+                    isMaximized = false;
+                }
+                else {
+                    glfwSetCursor(window, glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
+                    window_pos_x = init_x - mouse_start_pos.x + mouse_pos.x;
+                    window_pos_y = init_y - mouse_start_pos.y + mouse_pos.y;
+                    glfwSetWindowPos(window, window_pos_x, window_pos_y);
+                }
             }
         }
         else if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
@@ -181,6 +201,14 @@ int CleanGui::start_clean_window()
     }
     else
         mouse_clicked = false;
+
+    if (isMaximized)
+    {
+        glfwSetWindowPos(window, 0, 0);
+        glfwSetWindowSize(window, xScreenResolution, yScreenResolution);
+        return 0;
+    }
+    glfwGetCursorPos(window, &curx, &cury);
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouse_dragging)
     {
@@ -214,7 +242,6 @@ int CleanGui::start_clean_window()
         if (resize_clicked == RIGHT) {
             w = re_size_x + pt.x - re_pos_x;
             glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR));
-            printf("asdfasdf");
         }
         if (resize_clicked == TOP) {
             window_pos_y = pt.y - re_cur_y;
