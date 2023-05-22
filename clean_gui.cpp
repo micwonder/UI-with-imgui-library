@@ -130,7 +130,6 @@ void CleanGui::setDPI()
     h = (int)1.0 * h * ndpiY / dpiY;
     dpiX = ndpiX;
     dpiY = ndpiY;
-    printf("%d %d\n", w, h);
 }
 int CleanGui::start_clean_window()
 {

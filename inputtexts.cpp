@@ -24,9 +24,9 @@ void InputTexts::render(ImVec2 _pos, ImVec2 _size, ImColor bg_color) {
     ImVec2 start_pos = { pos.x + padding_x, pos.y + (size.y - padding_y) / 2 };
     char placeholder[30];
     char temptext[30];
-
     ImGui::SetCursorPos({ start_pos.x + padding_y, start_pos.y });
     ImGui::SetNextItemWidth(width - padding_y);
+
     if (type == 0) { strcpy(placeholder, "Email"); }
     else { strcpy(placeholder, "********"); }
     strcpy(temptext, text);
@@ -52,7 +52,7 @@ void InputTexts::render(ImVec2 _pos, ImVec2 _size, ImColor bg_color) {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 0, 0, 0));
             ImGui::InputTextWithHint(str_id, placeholder, text, 30, ImGuiInputTextFlags_Password);
             ImGui::PopStyleColor();
-            ImGui::SetCursorPos({ start_pos.x + padding_y + 8, start_pos.y + 8 });
+            ImGui::SetCursorPos({ start_pos.x + padding_y + 8, start_pos.y + 12 });
             ImGui::Text(temptext);
         }
         else

@@ -76,18 +76,18 @@ void Selector::doModal(ImVec2 _pos, ImVec2 _size)
             temp = " ";
         ImGui::SetWindowPos(buttonpos);
         if (ImGui::TextButton(button_id.data(), (current_item + temp).data())) { button_clicked = !button_clicked; cT = std::time(0); }
-        ImVec2 arrowpos = buttonpos + ImGui::CalcTextSize((current_item + temp).data()) + ImVec2(-2, 2);
+        ImVec2 arrowpos = buttonpos + ImGui::CalcTextSize((current_item + temp).data()) + ImVec2(0, 2);
         arrowpos = ImVec2((int)arrowpos.x, (int)arrowpos.y);
         if (button_clicked)
         {
-            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x, arrowpos.y - 1 }, { arrowpos.x + 5, arrowpos.y - 10}, IM_COL32(255, 255, 255, 255));
-            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x + 5, arrowpos.y - 10 }, { arrowpos.x + 10, arrowpos.y }, IM_COL32(255, 255, 255, 255));
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x, arrowpos.y - 1 }, { arrowpos.x + 5, arrowpos.y - 10}, IM_COL32(255, 255, 255, 128));
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x + 5, arrowpos.y - 10 }, { arrowpos.x + 10, arrowpos.y }, IM_COL32(255, 255, 255, 128));
 
         }
         else
         {
-            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x, arrowpos.y - 10 }, { arrowpos.x + 5, arrowpos.y - 1}, IM_COL32(255, 255, 255, 255));
-            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x + 5, arrowpos.y }, { arrowpos.x + 10, arrowpos.y - 11 }, IM_COL32(255, 255, 255, 255));
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x, arrowpos.y - 10 }, { arrowpos.x + 5, arrowpos.y - 1}, IM_COL32(255, 255, 255, 128));
+            ImGui::GetWindowDrawList()->AddLine({ arrowpos.x + 5, arrowpos.y - 1}, { arrowpos.x + 10, arrowpos.y - 11 }, IM_COL32(255, 255, 255, 128));
         }
     }
     else {

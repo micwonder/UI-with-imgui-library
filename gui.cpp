@@ -494,7 +494,7 @@ void Gui::overviewPage()
         subtiles.endTile();
         subtiles.addTile("Average_CHILD2", { 0, 1 }, { 1, 1 }, COLOR_BORDER);
         createText({ 0, 0 }, subtiles.curSize(), wpm_values[wpm_selector.currentIndex()].data(), ImGui::GetIO().Fonts->Fonts[1], COLOR_WHITE);
-        wpm_selector.doModal({ tiles.curPos() + tiles.curSize() - ImVec2(70, 20) }, {70, 100});
+        wpm_selector.doModal({ tiles.curPos() + tiles.curSize() - ImVec2(80, 20) }, {80, 100});
         subtiles.endTile();
     }
     tiles.endTile();
