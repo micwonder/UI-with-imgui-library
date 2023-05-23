@@ -8,7 +8,6 @@ Tiles::Tiles(ImVec2 _windowpos, ImVec2 _windowsize, ImVec2 _grids, float _spacin
 	cursize = windowsize;
 	thick = thick < curve ? curve : thick;
 }
-Tiles::~Tiles(){}
 
 void Tiles::addTile(char* str_id, ImVec2 tilepos, ImVec2 tilesize, ImU32 color){
 	curpos = windowpos + windowsize / grids * tilepos;

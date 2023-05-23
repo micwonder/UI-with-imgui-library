@@ -101,15 +101,15 @@ public:
     void createLanguageSpoken(std::vector<char*>& languages, std::vector<float>& values, ImVec2 size);
 
     void setWpm(int _wpm) { wpm = _wpm; }
-    void setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::string> _wpm_values);
-    void setDevice(std::vector<std::string> _device_items);
-    void setNews(std::vector<std::string> _news_items);
+    void setWpmAverage(std::vector<std::string>& _wpm_items, std::vector<std::string>& _wpm_values);
+    void setDevice(std::vector<std::string>& _device_items);
+    void setNews(std::vector<std::string>& _news_items);
     void setHistoryText(std::string _history_text) { history_text = _history_text; }
     void setNewsText(std::string _news_text) { news_text = _news_text; }
-    void setLanguageSpoken(std::vector<char*> _languages, std::vector<float> _language_values);
+    void setLanguageSpoken(std::vector<char*>& _languages, std::vector<float>& _language_values);
     void setHistogram(std::vector<float>& _histogram);
-    void setTimeState(std::vector<std::string> _states) { usage_time.updateStates(_states); }
-    void setTimeValue(int n, std::vector<std::string> _valuename, std::vector<float> _value) { usage_time.updateValue(n, _valuename, _value); }
-    void setTimeValues(std::vector<std::vector<std::string>> _valuenames, std::vector<std::vector<float>> _values) { usage_time.updateValues(_valuenames, _values); }
+    void setTimeState(std::vector<std::string>& _states) { usage_time.updateStates(_states); }
+    void setTimeValue(int n, std::vector<std::string>& _valuename, std::vector<float>& _value) { usage_time.updateValue(n, _valuename, _value); }
+    void setTimeValues(std::vector<std::vector<std::string>>& _valuenames, std::vector<std::vector<float>>& _values) { usage_time.updateValues(_valuenames, _values); }
     void setNotification(bool checked) { checked_notification = checked; }
 };

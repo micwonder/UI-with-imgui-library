@@ -12,13 +12,14 @@ void CheckBox::render(ImVec2 _pos, ImVec2 _size)
 	ImGui::Checkbox(label.data(), &checked);
 	if (last_checked != checked)
 		check_event->OnEvent({ (void*)checked });
-	float y = ImGui::GetCursorPosY() - ImGui::GetStyle().ItemSpacing.y / 2 - 20;
+	ImVec2 spacing = ImGui::GetStyle().ItemSpacing;
+	float y = ImGui::GetCursorPosY() - spacing.y / 2 - 20;
 	if (line)
 	{
-		ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x + ImGui::GetStyle().ItemSpacing.y, y }, { ImGui::GetCursorScreenPos().x + ImGui::GetWindowWidth(), y + 24 }, bgcolor);
-		ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x + ImGui::GetStyle().ItemSpacing.y, y + 10}, { ImGui::GetCursorScreenPos().x + ImGui::GetStyle().ItemSpacing.y + width, y + 13 }, IM_COL32(0x21, 0x23, 0x2d, 0xff));
+		ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x + spacing.y, y }, { ImGui::GetCursorScreenPos().x + ImGui::GetWindowWidth(), y + 24 }, bgcolor);
+		ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x + spacing.y, y + 10}, { ImGui::GetCursorScreenPos().x + spacing.y + width, y + 13 }, IM_COL32(0x21, 0x23, 0x2d, 0xff));
 	}
 	else
-		ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x + ImGui::GetStyle().ItemSpacing.y, y }, { ImGui::GetCursorScreenPos().x + ImGui::GetWindowWidth(), y + 24 }, bgcolor);
+		ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x + spacing.y, y }, { ImGui::GetCursorScreenPos().x + ImGui::GetWindowWidth(), y + 24 }, bgcolor);
 	ImGui::PopFont();
 }

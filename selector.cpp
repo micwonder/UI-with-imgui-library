@@ -3,37 +3,49 @@
 #include "imgui_internal.h"
 
 Selector::Selector() {}
-Selector::Selector(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align)
+Selector::Selector(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align) : button_id(_button_id), popup_id(_popup_id), buttonpos(_pos), popupsize(_size)
 {
     select_event = new SelectEvent;
-	button_id = _button_id;
-    popup_id = _popup_id;
 	for (int i = 0; i < _items.size(); ++i)
 		items.push_back(_items[i]);
-	buttonpos = _pos;
-	popupsize = _size;
 	current_item = items[0];
 	current_index = 0;
     button_clicked = false;
     align = _align;
     type = TEXT_BUTTON;
+    image = 0;
+    cT = 0;
 }
-
-Selector::Selector(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align, GLuint _image)
+Selector& Selector::operator = (const Selector& other) {
+    if (this == &other)
+        return *this;
+    button_id = other.button_id, popup_id = other.popup_id;
+    std::vector<std::string> items;
+    buttonpos = other.buttonpos, popuppos = other.popuppos;
+    buttonsize = other.buttonsize, popupsize = other.popupsize;
+    current_item = other.current_item;
+    current_index = other.current_index;
+    button_clicked = other.button_clicked;
+    image = other.image;
+    type = other.type;
+    align = other.align;
+    oversize = other.oversize;
+    select_event = other.select_event;
+    cT = other.cT;
+    return *this;
+}
+Selector::Selector(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _align, GLuint _image) : button_id(_button_id), popup_id(_popup_id), buttonpos(_pos), popupsize(_size)
 {
     select_event = new SelectEvent;
-    button_id = _button_id;
-    popup_id = _popup_id;
     for (int i = 0; i < _items.size(); ++i)
         items.push_back(_items[i]);
-    buttonpos = _pos;
-    popupsize = _size;
     current_item = items[0];
     current_index = 0;
     button_clicked = false;
     align = _align;
     type = IMAGE_BUTTON;
     image = _image;
+    cT = 0;
 }
 
 Selector::~Selector()

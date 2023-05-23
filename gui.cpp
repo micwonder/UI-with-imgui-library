@@ -569,7 +569,7 @@ void Gui::overviewPage()
     ImGui::PopStyleColor();
 }
 
-void Gui::setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::string> _wpm_values)
+void Gui::setWpmAverage(std::vector<std::string>& _wpm_items, std::vector<std::string>& _wpm_values)
 {
     wpm_items.clear();
     wpm_values.clear();
@@ -579,20 +579,20 @@ void Gui::setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::st
         wpm_values.push_back(_wpm_values[i]);
     wpm_selector.updateValue(wpm_items);
 }
-void Gui::setDevice(std::vector<std::string> _device_items) {
+void Gui::setDevice(std::vector<std::string>& _device_items) {
     device_items.clear();
     for (int i = 0; i < _device_items.size(); i++)
         device_items.push_back(_device_items[i]);
     device_selector.updateValue(device_items);
 }
-void Gui::setNews(std::vector<std::string> _news_items) {
+void Gui::setNews(std::vector<std::string>& _news_items) {
     news_items.clear();
     for (int i = 0; i < _news_items.size(); i++)
         news_items.push_back(_news_items[i]);
     news_selector.updateValue(news_items);
 }
 
-void Gui::setLanguageSpoken(std::vector<char*> _languages, std::vector<float> _language_values)
+void Gui::setLanguageSpoken(std::vector<char*>& _languages, std::vector<float>& _language_values)
 {
     languages.clear();
     language_values.clear();

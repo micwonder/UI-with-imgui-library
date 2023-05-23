@@ -119,7 +119,7 @@ void CleanGui::setResizeCursor()
     if(resize_state == LEFT || resize_state == RIGHT){ glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR)); }
     else if (resize_state == TOP || resize_state == BOTTOM) { glfwSetCursor(window, glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR));}
     else if (resize_state == LEFTTOP || resize_state == RIGHTBOTTOM) { glfwSetCursor(window, icons[0]); }
-    else if (resize_state == LEFTBOTTOM || resize_state == LEFTBOTTOM) { glfwSetCursor(window, icons[1]); }
+    else if (resize_state == LEFTBOTTOM || resize_state == RIGHTTOP) { glfwSetCursor(window, icons[1]); }
     else { resize_over = false; }
 }
 
