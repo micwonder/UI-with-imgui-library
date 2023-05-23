@@ -27,7 +27,7 @@ class LineGraph : public Graph
 public:
 	LineGraph() {}
 	LineGraph(ImVec2 _pos, ImVec2 _size, ImFont* _font, ImU32 _darkcolor, ImU32 _lightcolor, ImU32 _bgcolor, std::vector<float> _histogram);
-	void updateHistogram(std::vector<float> _historgram);
+	void updateHistogram(std::vector<float>& _historgram);
 	void render();
 };
 // Draw Var graph with values (This graph is for usage time)
@@ -40,8 +40,8 @@ public:
 	VarGraph() {}
 	VarGraph(ImVec2 _pos, ImVec2 _size, ImFont* _font, ImU32 _darkcolor, ImU32 _lightcolor, ImU32 _bgcolor, std::vector<std::string> _states, std::vector<std::vector<std::string>> _valuenames, std::vector<std::vector<float>> _values);
 	void updateStates(std::vector<std::string> _states);
-	void updateValue(int n, std::vector<std::string> _valuename, std::vector<float> _value);
-	void updateValues(std::vector<std::vector<std::string>> _valuesnames, std::vector<std::vector<float>> _values);
+	void updateValue(int n, std::vector<std::string>& _valuename, std::vector<float>& _value);
+	void updateValues(std::vector<std::vector<std::string>>& _valuesnames, std::vector<std::vector<float>>& _values);
 	float getContentX();
 	void render();
 };

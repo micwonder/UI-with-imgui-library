@@ -6,7 +6,7 @@ LineGraph::LineGraph(ImVec2 _pos, ImVec2 _size, ImFont* _font, ImU32 _darkcolor,
 	for(int i = 0; i < _histogram.size(); i ++)
 		histogram.push_back(_histogram[i]);
 }
-void LineGraph::updateHistogram(std::vector<float> _historgram) {
+void LineGraph::updateHistogram(std::vector<float>& _historgram) {
 	histogram.clear();
 	for (int i = 0; i < _historgram.size(); i++)
 		histogram.push_back(_historgram[i]);
@@ -43,7 +43,7 @@ void VarGraph::updateStates(std::vector<std::string> _states)
     for (int i = 0; i < _states.size(); i++)
         states.push_back(_states[i]);
 }
-void VarGraph::updateValue(int n, std::vector<std::string> _valuename, std::vector<float> _value) {
+void VarGraph::updateValue(int n, std::vector<std::string>& _valuename, std::vector<float>& _value) {
 	if (n >= values.size())
 		return;
 	values[n].clear();
@@ -53,7 +53,7 @@ void VarGraph::updateValue(int n, std::vector<std::string> _valuename, std::vect
     for (int i = 0; i < _valuename.size(); i++)
         valuenames[n].push_back(_valuename[i]);
 }
-void VarGraph::updateValues(std::vector<std::vector<std::string>> _valuenames, std::vector<std::vector<float>> _values) {
+void VarGraph::updateValues(std::vector<std::vector<std::string>>& _valuenames, std::vector<std::vector<float>>& _values) {
 	valuenames.clear();
 	values.clear();
 

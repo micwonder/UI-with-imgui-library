@@ -2,8 +2,22 @@
 
 Button::Button() {}
 Button::~Button() {}
-Button::Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type, float _curve) : id(_id), text(_text), pos(_pos), size(_size), font(_font), type(_type), curve(_curve) { click_event = new ClickEvent; }
+Button::Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type, float _curve) : id(_id), text(_text), pos(_pos), size(_size), type(_type), curve(_curve) { click_event = new ClickEvent; font = new ImFont; font = _font; }
 Button::Button(std::string _id, ImVec2 _pos, ImVec2 _size, GLuint _image, float _curve) : id(_id), pos(_pos), size(_size), image(_image), type(BUTTON_IMAGE), curve(_curve) { click_event = new ClickEvent; }
+Button& Button::operator = (const Button& other)
+{
+	id = other.id;
+	pos = other.pos;size = other.size;
+	type = other.type;
+	text = other.text;
+	font = new ImFont;
+	font = other.font;
+	image = other.image;
+	curve = other.curve;
+	click_event = new ClickEvent;
+	click_event = other.click_event;
+	return *this;
+}
 bool Button::render(ImVec2 _pos, ImVec2 _size)
 {
 	pos = _pos;

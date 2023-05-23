@@ -40,7 +40,7 @@
 class Gui : public CleanGui
 {
 private:
-    //ImFont *font;
+    ImFontAtlas* Fonts;
 
     int current_page;
     GLuint my_image_texture[20] = { 0 };
@@ -98,7 +98,7 @@ public:
     void createText(ImVec2 pos, ImVec2 size, char* text, ImFont* font, ImU32 color); //create Text in specified font and color
     void createWrapText(char* text, ImFont* font, float wrap_pos, ImU32 color); //create wrap Text in specified font and color
     void createProgressBar(float value, ImVec2 size); //create progress bar
-    void createLanguageSpoken(std::vector<char*> languages, std::vector<float> values, ImVec2 size);
+    void createLanguageSpoken(std::vector<char*>& languages, std::vector<float>& values, ImVec2 size);
 
     void setWpm(int _wpm) { wpm = _wpm; }
     void setWpmAverage(std::vector<std::string> _wpm_items, std::vector<std::string> _wpm_values);
@@ -107,7 +107,7 @@ public:
     void setHistoryText(std::string _history_text) { history_text = _history_text; }
     void setNewsText(std::string _news_text) { news_text = _news_text; }
     void setLanguageSpoken(std::vector<char*> _languages, std::vector<float> _language_values);
-    void setHistogram(std::vector<float> _histogram);
+    void setHistogram(std::vector<float>& _histogram);
     void setTimeState(std::vector<std::string> _states) { usage_time.updateStates(_states); }
     void setTimeValue(int n, std::vector<std::string> _valuename, std::vector<float> _value) { usage_time.updateValue(n, _valuename, _value); }
     void setTimeValues(std::vector<std::vector<std::string>> _valuenames, std::vector<std::vector<float>> _values) { usage_time.updateValues(_valuenames, _values); }

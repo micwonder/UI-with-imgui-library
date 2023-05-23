@@ -6,15 +6,15 @@ InputTexts::InputTexts() {}
 InputTexts::InputTexts(char* _str_id, ImVec2 _pos, ImVec2 _size, ImU32 _color_dark, ImU32 _color_light, ImU32 _color_edge, int _type, GLuint _img_email, GLuint _img_pass, GLuint _img_eye_on, GLuint _img_eye_off, float _curve) : pos(_pos), size(_size), color_dark(_color_dark), color_light(_color_light), color_edge(_color_edge), type(_type), img_email(_img_email), img_pass(_img_pass), img_eye_on(_img_eye_on), img_eye_off(_img_eye_off), curve(_curve)
 {
     text_edit_event = new TextEditEvent;
-    str_id = new char[strlen(_str_id)];
+    str_id = new char[strlen(_str_id) + 1];
     strcpy(str_id, _str_id);
     text = new char[30];
-    strcpy(text, "");
+    text[0] = 0;
     status = false;
 }
 
-InputTexts::~InputTexts() {
-}
+
+InputTexts::~InputTexts() {}
 void InputTexts::render(ImVec2 _pos, ImVec2 _size, ImColor bg_color) {
     pos = _pos;
     size = _size;

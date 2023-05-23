@@ -32,28 +32,29 @@ private:
     char* title = "Boss";
     char* icon_image_path = "C:/dev/Resources/Icons/BossIcons/BossIcon-1.png";
     int glfw_pos_x_ = 0, glfw_pos_y_ = 0, w = 1100, h = 700, content_w = 1100, content_h = 700;
-    UINT dpiX, dpiY;
-    int SetWindowsTitleBar();
+    UINT dpiX = 1, dpiY = 1;
 
     int window_pos_x = 500;
     int window_pos_y = 100;
     int init_x = 0;
     int init_y = 0;
-    POINT mouse_start_pos;
+    POINT mouse_start_pos = { 0, 0 };
     ImVec2 window_start_pos = { 0, 0 };
     bool mouse_clicked = false;
     bool mouse_dragging = false;
     int resize_clicked = 0;
-    double re_pos_x, re_pos_y, re_size_x, re_size_y, re_cur_x, re_cur_y;
+    double re_pos_x = 0, re_pos_y = 0, re_size_x = 0, re_size_y = 0, re_cur_x = 0, re_cur_y = 0;
+    HWND hwnd;
     GLFWimage icon_files[5];
     GLFWcursor* icons[5];
-
+    
 protected:
     GLFWwindow* window;
 public:
     bool isMaximized = false;
     bool isclose = false;
     bool resize_over = false;
+    float cur_scale = 1;
     int init_glfw();
     int init_im_gui();
 
@@ -64,7 +65,7 @@ public:
     int terminate_glfw();
 
     bool LoadTextureFromFile(const char* filename, GLuint* out_texture, int* out_width, int* out_height);
-
+    int SetWindowsTitleBar();
     ImVec2 getWindowSize();
     void minimizeWindow();
     void maximizeWindow();

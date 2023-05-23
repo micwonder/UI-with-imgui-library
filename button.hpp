@@ -25,4 +25,5 @@ public:
 	Button(std::string _id, std::string _text, ImVec2 _pos, ImVec2 _size, ImFont* _font, int _type, float _curve = 0.0f);
 	Button(std::string _id, ImVec2 _pos, ImVec2 _size, GLuint _image, float _curve = 10.0f);
 	bool render(ImVec2 _pos, ImVec2 _size);
+	Button& operator=(const Button&);
 };

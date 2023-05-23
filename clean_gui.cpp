@@ -57,7 +57,9 @@ int CleanGui::init_glfw()
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
     glfwWindowHint(GLFW_DECORATED, false);
     window = glfwCreateWindow(w, h, title, nullptr, nullptr);
+    hwnd = glfwGetWin32Window(window);
     glfwMakeContextCurrent(window);
+    glViewport(0, 0, w, h);
     glfwShowWindow(window);
 
     GLFWimage images[1];
@@ -128,6 +130,10 @@ void CleanGui::setDPI()
     GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &ndpiX, &ndpiY);
     w = (int)1.0 * w * ndpiX / dpiX;
     h = (int)1.0 * h * ndpiY / dpiY;
+    content_w = (int)1.0 * content_w * ndpiX / dpiX;
+    content_h = (int)1.0 * content_h * ndpiY / dpiY;
+    cur_scale *= (1.0 * ndpiX / dpiX);
+    ImGui::GetIO().FontGlobalScale = ImGui::GetIO().FontGlobalScale * ndpiX / dpiX;
     dpiX = ndpiX;
     dpiY = ndpiY;
 }
