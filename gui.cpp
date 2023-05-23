@@ -388,16 +388,20 @@ void Gui::settingPage()
 
 void Gui::dictationPage()
 {
+    ImVec2 windowsize = getWindowSize();
     dividePane(75, COLOR_GUI_LEFT, COLOR_GUI_RIGHT);
     createTitleBar(COLOR_GUI_RIGHT);
     createTabIcon();
     createText({ 100, 35 }, { 0, 0 }, "Dictation", Fonts->Fonts[0], COLOR_WHITE);
 
     createText({ 120, 130 }, { 0, 0 }, "Application Control", Fonts->Fonts[1], COLOR_WHITE);
+    command_checkbox.setWidth(windowsize.x / 5 * 4);
     command_checkbox.render(ImGui::GetWindowPos() + ImVec2(120, 0), {0, 0});
     createText({ ImGui::GetCursorPos()}, { 0, 0 }, "Enable", Fonts->Fonts[1], COLOR_WHITE);
+    vad_checkbox.setWidth(windowsize.x / 5 * 4);
     vad_checkbox.render(ImGui::GetWindowPos(), { 0, 0 });
     createText({ ImGui::GetCursorPos() }, { 0, 0 }, "Enable All", Fonts->Fonts[1], COLOR_WHITE);
+    rules_checkbox.setWidth(windowsize.x / 5 * 4);
     rules_checkbox.render(ImGui::GetWindowPos(), { 0, 0 });
 }
 

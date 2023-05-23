@@ -124,7 +124,10 @@ void VarGraph::render(){
         else
             txtsize = ImGui::CalcTextSize(x_label[i - 1].data());
         y_label_pos = ImVec2(y_label_pos.x + txtsize.x + 5, y_label_pos.y);
-        ImGui::SetCursorScreenPos(y_label_pos);
+        if(i == 0)
+            ImGui::SetCursorScreenPos({ y_label_pos.x, y_label_pos.y - ImGui::GetStyle().FramePadding.y });
+        else
+            ImGui::SetCursorScreenPos(y_label_pos);
         ImGui::Text(x_label[i].data());
         float gx = y_label_pos.x + ImGui::CalcTextSize(x_label[i].data()).x / 2;
         ImGui::GetWindowDrawList()->AddRectFilledMultiColorRounded(ImVec2(int(gx - width / 2), int(gy - height * y_label[i] / maxVal)), ImVec2(int(gx + width / 2), int(gy)), bgcolor, darkcolor, darkcolor, lightcolor, lightcolor, 5.0f, ImDrawFlags_RoundCornersAll);

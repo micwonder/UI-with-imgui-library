@@ -17,7 +17,7 @@ class CheckBox
 public:
 	Event* check_event;
 	CheckBox();
-	CheckBox(std::string _label, ImVec2 _pos, ImVec2 _size, ImFont* _font, bool _checked, ImU32 _bgcolor = IM_COL32(255, 255, 255, 255), bool _line = true, float _width = 0);
+	CheckBox(std::string _label, ImVec2 _pos, ImVec2 _size, ImFont* _font, bool _checked, ImU32 _bgcolor = IM_COL32(255, 255, 255, 255), bool _line = false, float _width = 0);
 	void render(ImVec2 _pos, ImVec2 _size);
 	void setWidth(float _width) { width = _width; }
 };
