@@ -52,7 +52,7 @@ Selector::~Selector()
 {
 }
 
-void Selector::doModal(ImVec2 _pos, ImVec2 _size)
+void Selector::doModal(ImVec2 _pos, ImVec2 _size, ImVec2 _buttonsize)
 {
     buttonpos = _pos;
     popupsize = _size;
@@ -105,7 +105,7 @@ void Selector::doModal(ImVec2 _pos, ImVec2 _size)
     }
     else {
         ImGui::SetCursorScreenPos(buttonpos);
-        if (ImGui::ImageButton(button_id.data(), (void*)(intptr_t)image, { 30, 30 })) { button_clicked = !button_clicked; cT = std::time(0); }
+        if (ImGui::ImageButton(button_id.data(), (void*)(intptr_t)image, _buttonsize, {0, 0}, {1, 1})) { button_clicked = !button_clicked; cT = std::time(0); }
     }
     if (button_clicked) {
         button_clicked = render();

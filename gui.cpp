@@ -533,35 +533,35 @@ void Gui::overviewPage()
 
     ImVec2 curpos, cursize;
     //Input device
-    curpos = ImVec2(windowsize.x - 300, 35);
-    cursize = ImVec2(180, 40 * cur_scale);
-    ImGui::PushFont(Fonts->Fonts[10]);
+    curpos = ImVec2(windowsize.x - 30 - 70 * cur_scale - 180 * cur_scale, 35);
+    cursize = ImVec2(180 * cur_scale, 30 * cur_scale + 5);
+    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[10]);
     ImGui::GetWindowDrawList()->AddRectFilled(curpos - ImVec2(10, 0), curpos + cursize, IM_COL32(0x21, 0x24, 0x30, 0xff));
     ImGui::GetWindowDrawList()->AddRectFilled(curpos + ImVec2(-5, 15 * cur_scale), curpos + cursize - ImVec2(5, 5), IM_COL32(0x0d, 0x12, 0x1d, 0xff));
     ImGui::SetCursorScreenPos(curpos + ImVec2(5, 0));
     ImGui::Text("INPUT DEVICE");
     ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_GUI_RIGHT);
-    ImGui::BeginChild("##DeviceChild", ImVec2(170, 20 * cur_scale), curpos + ImVec2(0, 15 * cur_scale), 0, ImGuiWindowFlags_NoScrollbar);
-    device_selector.doModal(curpos + ImVec2(0, 15 * cur_scale), ImVec2(170, 100));
+    ImGui::BeginChild("##DeviceChild", ImVec2(cursize.x, 15 * cur_scale), curpos + ImVec2(-5, 15 * cur_scale), 0, ImGuiWindowFlags_NoScrollbar);
+    device_selector.doModal(curpos + ImVec2(-5, 15 * cur_scale - 2), ImVec2(cursize.x, 100));
     ImGui::EndChild();
     ImGui::PopStyleColor();
     ImGui::PopFont();
 
     // Notification Icon
-    curpos = ImVec2(windowsize.x - 110, 35);
-    cursize = ImVec2(35, 35);
+    curpos = ImVec2(windowsize.x - 20 - 70 * cur_scale, 35);
+    cursize = ImVec2(30 * cur_scale, 30 * cur_scale);
     ImGui::PushFont(Fonts->Fonts[10]);
     ImGui::PushStyleColor(ImGuiCol_ChildBg, COLOR_GUI_RIGHT);
     ImGui::BeginChild("##NewsChild", cursize + ImVec2(10, 10), curpos, 0, ImGuiWindowFlags_NoScrollbar);
-    news_selector.doModal(curpos, {170, 100});
+    news_selector.doModal(curpos, {170, 100}, cursize);
     ImGui::EndChild();
     ImGui::PopStyleColor();
     ImGui::PopFont();
     if (checked_notification) { ImGui::GetWindowDrawList()->AddCircleFilled(curpos + ImVec2(25, 10), 4.0f, COLOR_NOTIFICATION); }
 
     // User Button
-    curpos = ImVec2(windowsize.x - 60, 35);
-    cursize = ImVec2(35, 35);
+    curpos = ImVec2(windowsize.x - 10 - 35 * cur_scale, 35);
+    cursize = ImVec2(35 * cur_scale, 35 * cur_scale);
     ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON_USER);
     user_button.render(curpos, cursize);
     ImGui::PopStyleColor();

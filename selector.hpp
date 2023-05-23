@@ -30,7 +30,7 @@ public:
 	Selector(std::string _button_id, std::string _popup_id, std::vector<std::string> _items, ImVec2 _pos, ImVec2 _size, int _algin, GLuint _image);
 	~Selector();
 	Selector& operator = (const Selector& other);
-	void doModal(ImVec2 _pos, ImVec2 _size);
+	void doModal(ImVec2 _pos, ImVec2 _size, ImVec2 _buttonsize = {0, 0});
 	bool render();
 	int currentIndex();
 	void removeSelect() { button_clicked = false; }
