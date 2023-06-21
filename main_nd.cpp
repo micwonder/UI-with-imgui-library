@@ -7,13 +7,13 @@
 #include <d3dx9.h>
 #pragma comment(lib,"d3dx9.lib")
 
-#include "MenuBg.h" // Background picture
-#include "abyssinica.h" // Original font -> 0
+#include "design/MenuBg.h" // Background picture
+#include "design/abyssinica.h" // Original font -> 0
 
 // Blur
 #include "blur.hpp"
-#include "GeneralBg.h"
-#include "icon_font.h"
+#include "design/GeneralBg.h"
+#include "design/icon_font.h"
 
 LPDIRECT3D9              g_pD3D = NULL;
 LPDIRECT3DDEVICE9        g_pd3dDevice = NULL;
@@ -133,7 +133,6 @@ int main(int, char**)
     bool done = false;
     while (!done)
     {
-
         MSG msg;
         while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
         {
@@ -201,7 +200,7 @@ int main(int, char**)
                 ImGui::SetCursorPos(ImVec2(0, 90));
 
                 ImGui::BeginGroup();
-
+                
                 if (ImGui::Tab("A", 0 == tabs, ImVec2(45, 45)) && tabs != 0) {
                     active_tab = true;
                     tabs = 0;
@@ -281,7 +280,7 @@ int main(int, char**)
                     break;
                 }
 
-                ImGui::BeginChild("0", ImVec2(880, 507), ImVec2(115, 120));
+                ImGui::BeginChild("0", ImVec2(680, 507), ImVec2(115, 120));
 
                 switch (tab_menu) {
 
